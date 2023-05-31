@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="ArUco Motion Detection Thesis">
+    <meta name="author" content="Mithil Kashipurad">
+    <title>ArUco Motion Detection Thesis</title>
+
+    <!-- font icons -->
+    <link rel="stylesheet" href="/static/vendors/themify-icons/css/themify-icons.css">
+    
+    <!-- owl carousel -->
+    <link rel="stylesheet" href="/static/vendors/owl-carousel/css/owl.carousel.css">
+    <link rel="stylesheet" href="/static/vendors/owl-carousel/css/owl.theme.default.css">
+
+    <!-- Bootstrap + CSS main styles -->
+	<link rel="stylesheet" href="/static/css/css_file.css">
+
+</head>
+<body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
+
+    <nav id="scrollspy" class="navbar navbar-light bg-light navbar-expand-lg fixed-top" data-spy="affix" data-offset-top="20">
+        <div class="container">
+            <a class="navbar-brand" href="#"><img src="/static/imgs/aruco_logo.png" alt="" class="brand-img"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <h4 class="subtitle font-weight-normal" style="color:aliceblue">ArUco Motion Detection</h4>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item ml-0 ml-lg-4">
+                        <a class="nav-link btn btn-primary" href="about.html">About</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    
+    <header id="home_header" class="header">
+        <div class="overlay"></div>
+        <div id="header-carousel" class="carousel slide carousel-fade" data-ride="carousel">
+            <div class="container">
+                <div class="carousel-caption d-none d-md-block">
+                <h2 style="color:rgb(216, 67, 97);text-align:center;"><b>File Creation</b></h2>
+                <div  style="position: absolute;top:50%;right:43.5%;-ms-transform: translateY(-50%);transform: translateY(-50%);margin-top:50px;">
+                    <button type="button" class="btn btn-dark" onclick="window.location.href='/'"><b style="font-size:18px;"><</b> &nbsp;&nbsp;Back to Setup Phase</button>
+                </div>
+                    {% if file_exists %}
+                        <div id="modal_file_exists" class="modal" >
+                        <h2 style="color:rgb(216, 67, 97);text-align:center;"><b>File Creation</b></h2>
+                        <!-- Modal content -->
+                        <div class="modal-content" style="margin-top:30px;">
+                          <p style="font-family:Arial;">
+                            <center>
+                                <br>
+                                <p style="background-color: rgb(237, 62, 62, 0.4);padding-top: 10px;padding-bottom: 10px;"> The file name <b style="color:red">{{ filename }}</b> already exists.</p>
+                                <br>
+                                <div style="background-color: rgb(119, 117, 118, 0.2);padding-top: 10px;padding-bottom: 20px;">
+                                    <p style="padding-bottom: 20px;">Do you want to <b>append</b> the data generated in this trial to the existing file or <b>delete</b> it to create a new file with the same name?</p>
+                                    <div style="text-align: center;">
+                                        <button id="append" name="append" type="button" class="btn" style="background-color: #4CAF50;margin-right:30px;" onclick="send_append();call_info_modal();">Append &nbsp;&nbsp;<b style="font-size:18px;">></b> </button>
+                                        <button id="delete" name="delete" type="button" class="btn btn-primary" onclick="send_delete();call_info_modal();">Delete &nbsp;&nbsp;<b style="font-size:18px;">></b></button>
+                                    </div>
+                                </div>
+                                <br>
+                                <div  style="background-color: rgb(119, 117, 118, 0.2);padding-top: 10px;padding-bottom: 20px;">
+                                    <p style="padding-bottom: 20px;">Click on the <b>Back</b> button to return to thr previous page to change the file name.</p>
+                                <button type="button" class="btn btn-dark btn-block" onclick="window.location.href='/'"><b style="font-size:18px;"><</b> &nbsp;&nbsp;Back</button>
+                                </div>
+                            </center>
+                          </p>
+                        </div>
+                    </div>
+                    {% else %}
+                        <div id="modal_file_not_exists" class="modal" >
+                            <h2 style="color:rgb(216, 67, 97);text-align:center;"><b>File Creation</b></h2>
+                            <div class="modal-content" style="margin-top:30px;">
+                                <p style="font-family:Arial;">
+                                    <center>
+                                        <br>
+                                        <p style="background-color: rgb(76, 175, 80, 0.4);padding-top: 10px;padding-bottom: 10px;"> A new file, <b>{{ filename }}.csv</b> will be created at: <br><i>'{{ file_path }}'</i></p>
+                                        <p style="background-color: rgb(76, 175, 80, 0.4);padding-top: 10px;padding-bottom: 10px;"> <b>Tool List:</b> {{ tools }}</p>
+                                        <br>
+                                        <button id="to_aruco_mapping" name="to_aruco_mapping" type="button" class="btn btn-primary" onclick="send_new_file();call_info_modal();">To ArUco Mapping &nbsp;&nbsp;<b style="font-size:18px;">></b></button>
+                                        <br><br>
+                                        <button type="button" class="btn btn-dark" onclick="window.location.href='/'"><b style="font-size:18px;">&nbsp;<</b> &nbsp; &nbsp;Back &nbsp; &nbsp;</button>
+                                    </center>
+                                </p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div id="modal_info" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+          <p>
+            <center>
+                <br>
+                <p style="font-family:Arial;background-color: rgb(119, 117, 118, 0.4);padding-top: 10px;padding-bottom: 10px;"><b>ArUco Markers</b> can be generated for free <a href="https://chev.me/arucogen/" target="_blank">here.</a></p>
+                <div style="background-color: rgb(119, 117, 118, 0.3);">
+                    <form class="contact-form" method="POST" id="form_tool_aruco_map" style="padding-top:10px;padding-bottom:20px;">
+                        <div class="form-row">
+                            <div class="col form-group">
+                                 <center>
+                                     <h6 class="subtitle font-weight-normal" style="color:rgb(216, 67, 97)"><b>ArUco Marker mapping to the tools</b></h6>
+                                </center>
+                             </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <center>
+                                    <p>The following is the tool list:</p>
+                                    <label><b>{{ tools }}</b></label>
+                                </center>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <center>
+                                    <p>Please enter the ArUco marker IDs in the corresponding order you want to associate them with the tools <br>(separate them using commas):</p>
+                                    <p style="font-family:Arial;background-color: rgb(119, 117, 118, 0.4);padding-top:10px;padding-bottom:10px;"><i><b>Example:</b> <br>For a tool list <b style="font-family:Arial;">['Hammer', 'Chisel', 'Screwdriver']</b>, an input of marker IDs <b style="font-family:Arial;">5, 6, 0</b> would mean: <br> Hammer is associated with 5, Chisel with 6, and Screwdriver with 0.</i></p>
+                                    <input id="map" name="map" class="form-control" style="color:black;background-color: rgba(255, 255, 255, 1);font-family:Arial;" type="text" size="60" placeholder="Example: 5, 6, 0">
+                                </center>
+                            </div>
+                        </div>
+                         <div class="form-row">
+                            <div class="col form-group">
+                                <center>
+                                    <button type="submit" id="to_detection" name="to_detection" class="btn btn-primary btn-block" onclick="window.location.href='/detection'">To Detection &nbsp;&nbsp;<b style="font-size:18px;">></b></button>
+                                </center>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </center>
+          </p>
+        </div>
+	</div>
+
+	<!-- core  -->
+    <script src="/static/vendors/jquery/jquery-3.4.1.js"></script>
+    <script src="/static/vendors/bootstrap/bootstrap.bundle.js"></script>
+
+    <!-- bootstrap 3 affix -->
+	<script src="/static/vendors/bootstrap/bootstrap.affix.js"></script>
+    
+    <!-- Owl carousel  -->
+    <script src="/static/vendors/owl-carousel/js/owl.carousel.js"></script>
+
+    <!-- Script js -->
+    <script src="/static/js/scripts.js"></script>
+
+    <script type="text/javascript">
+
+        //display file exists modal on window load
+        $(window).on('load', function() {
+            $('#modal_file_exists').modal({
+                backdrop: 'static',
+                keyboard: false
+            })
+            $('#modal_file_exists').modal('show');
+            $(".modal-backdrop").remove();
+            /*var span = document.getElementsByClassName("close")[0];
+            /span.onclick = function() {
+                $('#modal_file_exists').modal('hide');
+            }
+            */
+        });
+
+        //display file does not exist modal on window load
+        $(window).on('load', function() {
+            $('#modal_file_not_exists').modal({
+                backdrop: 'static',
+                keyboard: false
+            })
+            $('#modal_file_not_exists').modal('show');
+            $(".modal-backdrop").remove();
+            /*var span = document.getElementsByClassName("close")[0];
+            /span.onclick = function() {
+                $('#modal_file_exists').modal('hide');
+            }
+            */
+        });
+
+        // Call info modal
+        function call_info_modal(){
+            $('#modal_info').modal({
+                backdrop: 'static',
+                keyboard: false
+            })
+            $('#modal_info').modal('show');
+            $(".modal-backdrop").remove();
+        }
+        document.getElementById("to_aruco_mapping").addEventListener("click", call_info_modal);
+        document.getElementById("append").addEventListener("click", call_info_modal);
+        document.getElementById("delete").addEventListener("click", call_info_modal);
+
+        // Send append data
+        function send_append(){
+
+            var data = "a"
+            var json_data = JSON.stringify(data);
+            console.log("Append selected");
+
+            $.ajax({
+                url:"/append_delete",
+                type:"POST",
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify(json_data)});
+        }
+        document.getElementById("append").addEventListener("click", send_append);
+
+        // Send delete data
+        function send_delete(){
+
+            var data = "d"
+            var json_data = JSON.stringify(data);
+            console.log("Delete selected");
+
+            $.ajax({
+                url:"/append_delete",
+                type:"POST",
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify(json_data)});
+        }
+        document.getElementById("delete").addEventListener("click", send_delete);
+
+        // Send new file create
+        function send_new_file(){
+
+            var data = "new"
+            var json_data = JSON.stringify(data);
+            console.log("Delete selected");
+
+            $.ajax({
+                url:"/append_delete",
+                type:"POST",
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify(json_data)});
+        }
+        document.getElementById("to_aruco_mapping").addEventListener("click", send_new_file);
+
+    </script>
+    <script>
+
+    </script>
+</body>
+</html>

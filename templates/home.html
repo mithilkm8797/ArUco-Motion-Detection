@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="ArUco Motion Detection Thesis">
+    <meta name="author" content="Mithil Kashipurad">
+    <title>ArUco Motion Detection Thesis</title>
+
+    <!-- font icons -->
+    <link rel="stylesheet" href="/static/vendors/themify-icons/css/themify-icons.css">
+    
+    <!-- owl carousel -->
+    <link rel="stylesheet" href="/static/vendors/owl-carousel/css/owl.carousel.css">
+    <link rel="stylesheet" href="/static/vendors/owl-carousel/css/owl.theme.default.css">
+
+    <!-- Bootstrap + CSS main styles -->
+	<link rel="stylesheet" href="/static/css/css_file.css">
+
+</head>
+<body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
+
+    <nav id="scrollspy" class="navbar navbar-light bg-light navbar-expand-lg fixed-top" data-spy="affix" data-offset-top="20">
+        <div class="container">
+            <a class="navbar-brand" href="#"><img src="/static/imgs/aruco_logo.png" alt="" class="brand-img"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <h4 class="subtitle font-weight-normal" style="color:aliceblue">ArUco Motion Detection</h4>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item ml-0 ml-lg-4">
+                        <a class="nav-link btn btn-primary" href="about.html">About</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    
+    <header id="home_header" class="header">
+        
+        <div class="overlay"></div>
+        <div id="header-carousel" class="carousel slide carousel-fade" data-ride="carousel">  
+            <div class="container">
+                <div class="carousel-caption d-none d-md-block">
+                    <form class="contact-form" method="POST" id="form">
+                        <div class="form-row">
+                            <div class="col form-group">
+                                 <center>
+                                     <h2 class="subtitle font-weight-normal" style="color:rgb(216, 67, 97)"><b>Setup Phase</b></h2>
+                                     <p><br></p>
+                                </center>
+                             </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <center>
+                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue">Please enter the name of the file you want to store the data in:</h6>
+                                    <p></p>
+                                    <input id="filename" type="text" class="form-control" size="60" name="filename" placeholder="Example: Data">
+                                </center>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <center>
+                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"><p></p></h6>
+                                </center>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <center>
+                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue">Please enter the name of the tools you want to use during detection: <br><br> (&nbsp;Seperate the tools using commas&nbsp;)</h6>
+                                    <p></p>
+                                    <input id="tools" type="text" class="form-control" size="80" name="tools" placeholder="Example: Hammer, Chisel, Pliers ">
+                                </center>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <center>
+                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"><br></h6>
+                                </center>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <center>
+                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"><br></h6>
+                                </center>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <center>
+                                <button id="to_file_creation" name="to_file_creation" type="submit" class="btn btn-primary btn-block" disabled="disabled" onclick="window.location.href='/file_creation'"> To File Creation &nbsp;&nbsp;<b style="font-size:18px;">></b></button>
+                            </center>
+                        </div>
+                    </form>        
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+	<!-- core  -->
+    <script src="/static/vendors/jquery/jquery-3.4.1.js"></script>
+    <script src="/static/vendors/bootstrap/bootstrap.bundle.js"></script>
+
+    <!-- bootstrap 3 affix -->
+	<script src="/static/vendors/bootstrap/bootstrap.affix.js"></script>
+    
+    <!-- Owl carousel  -->
+    <script src="/static/vendors/owl-carousel/js/owl.carousel.js"></script>
+
+    <!-- Script js -->
+    <script src="/static/js/scripts.js"></script>
+
+    <script type="text/javascript">
+
+        // script for to_file_creation button disable until all input fields are filled
+        let inputs = document.querySelectorAll('input');
+        let buttonSend = document.getElementById('to_file_creation');
+
+        let inputValidator = {
+        "filename": false,
+        "tools": false,
+        }
+
+        inputs.forEach((input) => {
+            input.addEventListener('input', () => {
+                let id = event.target.getAttribute('id');
+                if (event.target.value.length > 0) {
+                    inputValidator[id] = true;
+                }
+                else {
+                    inputValidator[id] = false;
+                };
+
+                let allTrue = Object.keys(inputValidator).every((item) => {
+                    return inputValidator[item] === true
+                });
+
+                if (allTrue) {
+                    buttonSend.disabled = false;
+                }
+                else {
+                    buttonSend.disabled = true;
+                }
+            })
+        })
+
+    </script>
+    <script>
+
+    </script>
+</body>
+</html>

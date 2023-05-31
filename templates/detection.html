@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="ArUco Motion Detection Thesis">
+    <meta name="author" content="Mithil Kashipurad">
+    <title>ArUco Motion Detection Thesis</title>
+
+    <!-- font icons -->
+    <link rel="stylesheet" href="/static/vendors/themify-icons/css/themify-icons.css">
+
+    <!-- owl carousel -->
+    <link rel="stylesheet" href="/static/vendors/owl-carousel/css/owl.carousel.css">
+    <link rel="stylesheet" href="/static/vendors/owl-carousel/css/owl.theme.default.css">
+
+    <!-- Bootstrap + CSS main styles -->
+	<link rel="stylesheet" href="/static/css/css_file.css">
+
+</head>
+<body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
+
+    <nav id="scrollspy" class="navbar navbar-light bg-light navbar-expand-lg fixed-top" data-spy="affix" data-offset-top="20">
+        <div class="container">
+            <a class="navbar-brand" href="#"><img src="/static/imgs/aruco_logo.png" alt="" class="brand-img"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <h4 class="subtitle font-weight-normal" style="color:aliceblue">ArUco Motion Detection</h4>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item ml-0 ml-lg-4">
+                        <a class="nav-link btn btn-primary" href="about.html">About</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <header id="home_header" class="header">
+
+        <div class="overlay"></div>
+        <div id="header-carousel" class="carousel slide carousel-fade" data-ride="carousel">
+            <div class="container">
+                <div class="carousel-caption d-none d-md-block">
+                    <form class="contact-form" method="POST" id="form">
+                        <div class="form-row">
+                            <div class="col form-group">
+                                 <center>
+                                     <h2 class="subtitle font-weight-normal" style="color:rgb(216, 67, 97);"><b>Detection</b></h2>
+                                </center>
+                             </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <center>
+                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"><br></h6>
+                                </center>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <center>
+                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"><br></h6>
+                                </center>
+                            </div>
+                        </div>
+                        <div style="background-color:rgb(0, 0, 0, 0.3);padding-top:20px;">
+                            <div class="form-row">
+                                <div class="col form-group">
+                                     <center>
+                                        <div>
+                                            <button id="start" name="start" type="button" class="btn" style="background-color: #4CAF50;" onclick="send_stream();modal_init();show_chkbx();">&nbsp;&nbsp; Start Video Stream &nbsp;&nbsp;</button>
+                                        </div>
+                                    </center>
+                                 </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col form-group">
+                                    <center>
+                                        <br>
+                                        <h6 class="subtitle font-weight-normal" style="color:aliceblue"> Note:<br></h6>
+                                        <h6 class="subtitle font-weight-normal" style="color:aliceblue"> Close the <i>'Video Stream Window'</i> to stop detection<br></h6>
+                                    </center>
+                                </div>
+                             </div>
+                        </div>
+                        <div style="background-color:rgb(0, 0, 0, 0.3);padding-top:20px;margin-top:20px;">
+                            <div class="form-row">
+                                <div class="col form-group">
+                                    <center>
+                                        <label class="subtitle font-weight-normal" id="agree_lbl" style="color:aliceblue;display:none;"><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tick the checkbox if you would like to stop further detections and proceed to Visualizations</label>
+                                        <input type="checkbox" id="agree_chkbx" autocomplete="off" name="agree_chkbx" value="agree" style="display:none;">
+                                    </center>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col form-group">
+                                    <center>
+                                        <button type="button" style="display:none;" id="to_visuals" name="to_visuals" class="btn btn-primary btn-block" onclick="window.location.href='/visualizations'">To Visualization &nbsp;&nbsp;<b style="font-size:18px;">></b></button>
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <center>
+                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"><br></h6>
+                                </center>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <center>
+                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"><br></h6>
+                                </center>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </header>
+    <div id="modal_init" class="modal" >
+        <div class="modal-content" style="margin-top:50px;">
+            <center>
+                <h5 style="color:rgb(237, 62, 62, 1);text-align:center;padding-top:30px;"><b>Initializing</b></h5>
+                <br><br>
+                <img style="margin-top:40px;margin-bottom:70px;" src="static/imgs/loading.gif" width="80" height="80">
+                <br><br>
+            </center>
+        </div>
+    </div>
+
+	<!-- core  -->
+    <script src="/static/vendors/jquery/jquery-3.4.1.js"></script>
+    <script src="/static/vendors/bootstrap/bootstrap.bundle.js"></script>
+
+    <!-- bootstrap 3 affix -->
+	<script src="/static/vendors/bootstrap/bootstrap.affix.js"></script>
+
+    <!-- Owl carousel  -->
+    <script src="/static/vendors/owl-carousel/js/owl.carousel.js"></script>
+
+    <!-- Script js -->
+    <script src="/static/js/scripts.js"></script>
+
+    <script type="text/javascript">
+
+        function start_stream(){
+
+            var data = "send"
+            var json_data = JSON.stringify(data);
+
+            $.ajax({
+                url:"/detection",
+                type:"POST",
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify(json_data)});
+        }
+        document.getElementById("start").addEventListener("click", start_stream);
+
+        function modal_init(){
+            $('#modal_init').modal({
+                backdrop: 'static',
+                keyboard: false
+            })
+            $('#modal_init').modal('show');
+            $(".modal-backdrop").remove();
+            setTimeout(function() {$('#modal_init').modal('hide');}, 6000);
+        }
+        document.getElementById("start").addEventListener("click", modal_init);
+
+        function show_chkbx(){
+            document.getElementById('agree_chkbx').style.display = "block";
+            document.getElementById('agree_lbl').style.display = "block";
+        }
+        document.getElementById("start").addEventListener("click", show_chkbx);
+
+        $(function() {
+            $('[type=checkbox]').click(function (){
+                var checkedChbx = $('[type=checkbox]:checked');
+                if (checkedChbx.length > 0)
+                {
+                    $('#to_visuals').show();
+                    $('#start').prop('disabled', true);
+                }
+                else
+                {
+                    $('#to_visuals').hide();
+                    $('#start').prop('disabled', false);
+                }
+
+            });
+        });
+
+    </script>
+
+</body>
+</html>
