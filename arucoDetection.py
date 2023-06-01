@@ -138,7 +138,7 @@ def check_file(filename_received):
 
     global folder, file_path, filename
 
-    filename = filename_received
+    filename = filename_received.strip()  # strip() to remove unwanted leading and trailing spaces
     folder = folder + filename
     file_path = folder + "/" + filename + ".csv"
     file_exists = os.path.exists(file_path)
@@ -155,7 +155,12 @@ def tools_to_list(tools):
     """
 
     global tool_list
+    stripped_tool_list = []
     tool_list = tools.split(',')
+    for tool in tool_list:
+        tool = tool.strip()  # strip() to remove unwanted leading and trailing spaces
+        stripped_tool_list.append(tool)
+    tool_list = stripped_tool_list
     print(tool_list)
     return tool_list
 
@@ -169,7 +174,12 @@ def markers_to_list(markers):
     """
 
     global marker_list
+    stripped_marker_list = []
     marker_list = markers.split(',')
+    for marker in marker_list:
+        marker = marker.strip()  # strip() to remove unwanted leading and trailing spaces
+        stripped_marker_list.append(marker)
+    marker_list = stripped_marker_list
     print("The Aruco marker list is: ", marker_list)
     return marker_list
 
@@ -182,6 +192,7 @@ def create_tools_marker_map_dict():
 
     global tool_marker_map_dict, marker_list, tool_list
     tool_marker_map_dict = dict(zip(marker_list, tool_list))
+    print("\nCreating marker and tool dictionary...")
     print("The dictionary is: ", tool_marker_map_dict)
 
 
@@ -259,8 +270,7 @@ def detection():
     print("Frames per second (fps) of the video: " + str(fps) + "\n")
 
     # function to map marker IDs to tool names
-    print("Creating marker and tool dictionary...\n")
-    create_tools_marker_map_dict()
+    # create_tools_marker_map_dict() # use if the web GUI isn't being used
 
     print("Start Capturing...\n")
 
@@ -283,6 +293,8 @@ def detection():
 
         cv2.imshow("Image", detected_image)
         cv2.imshow("Image", img)
+
+        # to make the window automatically pop up
         cv2.setWindowProperty("Image", cv2.WND_PROP_TOPMOST, 1)
         cv2.setWindowTitle("Image", "Aruco Object Detection Video Stream")
         cv2.moveWindow("Image", 120, 50)

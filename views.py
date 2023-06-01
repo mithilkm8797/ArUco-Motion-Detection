@@ -39,6 +39,7 @@ def file_creation():
     if request.method == 'POST':
         marker_list = request.form.get('map')
         marker_list = AD.markers_to_list(marker_list)
+        AD.create_tools_marker_map_dict()
         return redirect("/detection")
     return render_template("file_creation.html", file_exists=file_exists, filename=filename, file_path=file_path, tools=tool_list)
 
