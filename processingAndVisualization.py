@@ -1,15 +1,14 @@
 from datetime import datetime
-import csv
-import openpyxl
+
 import datetime as dt
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import os
 
 file_path = "C:/Users/kmmit/Desktop/Aruco Project/Data/Data.csv"
 tool_marker_map_dict = {"2": "Hammer", "1": "Chisel", "0": "Screwdriver"}
-
+flag_for_empty_data_append_override = 0
 
 def split_and_group_data(entire_data):
     """
@@ -20,6 +19,9 @@ def split_and_group_data(entire_data):
     individually grouped by the time column and mean of x-coordinate and y-coordinate columns is taken and is shortened
     to two decimal places. These data frames are stored in a list and the list is returned.
     """
+    if entire_data.empty:
+        print("The data sent to split and group was empty.")
+        return False
 
     # splitting data into data frames for each tool
     global tool_marker_map_dict
@@ -27,16 +29,34 @@ def split_and_group_data(entire_data):
     for key, value in tool_marker_map_dict.items():
         data_list.append(entire_data[entire_data['ID'] == value])
 
+    # remove empty data frames for cases when a certain tool is not used
+    # for each df in data_list if its is not empty then add it to data_list (syntax is called list comprehension)
+    data_list = [df for df in data_list if not df.empty]
+
     # Grouping the columns by time
     data_list_time_grouped = []
     for data in data_list:
-        data_list_time_grouped.append(data.groupby(['TimeStamp', 'ID'], as_index=False)[['X-co', 'Y-co']].mean().round(2))
+        grouped_data = data.groupby(['TimeStamp', 'ID'], as_index=False)[['X-co', 'Y-co']].mean().round(2)
+        data_list_time_grouped.append(grouped_data)
+
+    combined_data_for_excel = pd.DataFrame()
+    empty_row = {'TimeStamp': "", 'ID': "", 'X-co': "", 'Y-co': ""}
+
+    for data in data_list_time_grouped:
+        combined_data_for_excel = combined_data_for_excel._append(data, ignore_index=True)
+        combined_data_for_excel = combined_data_for_excel._append(empty_row, ignore_index=True)
+
+    generated_file_path = file_path[
+                          :-4] + "_split_group.xlsx"  # do not put quotes at the beginning and the end
+    generated_file_path = generated_file_path.replace("/", "\\")  # done to fix the path for .to_excel() to work
+    combined_data_for_excel.to_excel(generated_file_path, index=False)  # index=False prevent index input in excel
 
     return data_list_time_grouped
 
 
-def calculate_tool_usage(data_list_time_grouped):
+def calculate_tool_usage(data_list_time_grouped, flag):
     """
+    :param flag: flag is sent when an override of empty appended data is desired
     :param data_list_time_grouped: A list containing data frames grouped by time, for each tool.
     :return: data_with_tool_used_calc: A data frame with calculated 'used' column.
 
@@ -45,6 +65,8 @@ def calculate_tool_usage(data_list_time_grouped):
     changed if the difference between either the x-coordinates or the y-coordinates or both is greater than 1. The
     entries of 0s and 1s are made in 'used' column of the data frame. The data frames of different tools are combined
     and a new single data frame is returned.
+
+    The flag argument comes into play when the processingAndVisualization.py needs to be run with an empty data append.
     """
 
     for data in data_list_time_grouped:
@@ -66,8 +88,38 @@ def calculate_tool_usage(data_list_time_grouped):
                 data.loc[index, 'used'] = int(0)
 
     data_with_tool_used_calc = pd.DataFrame()
+
     for data in data_list_time_grouped:
         data_with_tool_used_calc = data_with_tool_used_calc._append(data, ignore_index=True)
+        # appending 4 zeros (meaning tool is at rest) after each tool to prevent errors in duration calculations to
+        # take of time gap between two appends of data to the same file
+        last_index = len(data) - 1
+        last_timestamp = data['TimeStamp'].iloc[last_index]
+        last_timestamp = datetime.strptime(last_timestamp, '%Y-%m-%d %H:%M:%S')
+        counter = 0
+        while counter < 4:
+            timestamp = last_timestamp + dt.timedelta(seconds=(counter + 1))
+            row_to_add_unused_entry = {'TimeStamp': timestamp, 'ID': data['ID'].iloc[last_index], 'X-co': 0,
+                                       'Y-co': 0, 'used': int(0)}
+            data_with_tool_used_calc = data_with_tool_used_calc._append(row_to_add_unused_entry, ignore_index=True)
+            counter += 1
+
+    generated_file_path_xlsx = file_path[
+                          :-4] + "_with_tool_usage_stats.xlsx"  # do not put quotes at the beginning and the end
+    generated_file_path_xlsx = generated_file_path_xlsx.replace("/", "\\")  # done to fix the path for .to_excel() to work
+
+    generated_file_path_csv = file_path[
+                               :-4] + "_with_tool_usage_stats.csv"  # do not put quotes at the beginning and the end
+    if flag == 0:
+        if os.path.exists(generated_file_path_csv):
+            prev_data_with_appened_zeros = pd.read_csv(generated_file_path_csv, sep=',')
+            cur_data_with_appened_zeros = prev_data_with_appened_zeros._append(data_with_tool_used_calc, ignore_index=True)
+            cur_data_with_appened_zeros = cur_data_with_appened_zeros.reset_index(drop=True)
+            data_with_tool_used_calc = cur_data_with_appened_zeros
+
+    data_with_tool_used_calc = data_with_tool_used_calc.reset_index(drop=True)
+    data_with_tool_used_calc.to_excel(generated_file_path_xlsx, index=False)
+    data_with_tool_used_calc.to_csv(generated_file_path_csv, index=False)  # index=False prevent index input in excel
 
     return data_with_tool_used_calc
 
@@ -171,14 +223,17 @@ def suggest_order(data):
 
     # Discarding tool usage less than 2 seconds
     tool_usage_duration_filtered = tool_usage_duration.query("Duration > 2.0")
+    if tool_usage_duration_filtered.empty:
+        print("The tools were not used for long enough to generate an order")
     ordered_data = tool_usage_duration_filtered.sort_values(by=['StartDate'])
-    ordered_data.reset_index(drop=True, inplace=True)
+    ordered_data = ordered_data.reset_index(drop=True)  # inplace=True
     # TODO: Write the code for 2 or more tools being used at the same time. suggest: tool 1 and tool 2
 
     order_file_path = file_path[:-4] + "_tool_order.xlsx"  # do not put quotes at the beginning and the end
     order_file_path = order_file_path.replace("/", "\\")  # done to fix the path for .to_excel() to work
     ordered_data.to_excel(order_file_path)
 
+    print(ordered_data)
     return ordered_data
 
 
@@ -208,19 +263,19 @@ def create_clean_data(data):
     6. This is done for each df and clean_df and a concatenated data frame of all data frames in clean_df_list is
     returned.
     """
+    if data.empty:
+        print("There is no data")
+        return
 
     start_date = data.loc[0, 'StartDate']
     end_date = data.loc[len(data) - 1, 'EndDate']
 
-    df = pd.DataFrame(columns=['TimeStamp', 'ID', 'used'])
-
     index = start_date
 
     # Create an empty data frame with continuous time stamps in steps of one second.
-
     clean_data = pd.DataFrame(columns=['TimeStamp', 'ID', 'used'])
     while index != (end_date + dt.timedelta(seconds=1)):
-        row = {'TimeStamp': index, 'ID': '', 'used': 0}
+        row = {'TimeStamp': index, 'ID': '', 'used': int(0)}
         clean_data = clean_data._append(row, ignore_index=True)
         index = index + dt.timedelta(seconds=1)
 
@@ -228,34 +283,44 @@ def create_clean_data(data):
     global tool_marker_map_dict
     data_list = []
     for key, value in tool_marker_map_dict.items():
-        data_list.append(data[data['ID'] == value].reset_index())
+        data_to_append = data[data['ID'] == value]
+        data_to_append = data_to_append.reset_index(drop=True)
+        data_list.append(data_to_append)
 
-    # Create a list of clean_data for each tool
-    clean_data_list = []
+    entire_clean_time_series_data = pd.DataFrame()
+
     for key, value in tool_marker_map_dict.items():
         clean_data['ID'] = value
-        clean_data_list.append(clean_data)
+        entire_clean_time_series_data = entire_clean_time_series_data._append(clean_data, ignore_index=True)
 
-    for (df, clean_df) in zip(data_list, clean_data_list):
+    ectsd = entire_clean_time_series_data  # for convenience
+
+    for df in data_list:
         for index_in_df in df.index:
+            tool = str(df['ID'].iloc[index_in_df])
+            print(tool)
             duration = int(df['Duration'].iloc[index_in_df])
+            print(duration)
             start_date = df['StartDate'].iloc[index_in_df]
-            start_index_to_fill = clean_data[clean_data['TimeStamp'] == start_date].index[0]
-            for index_in_clean_df in clean_df.index:
-                clean_data.loc[start_index_to_fill + index_in_clean_df, 'used'] = int(1)
-                if index_in_clean_df > duration - 1:
+            print(start_date)
+            row = ectsd[(ectsd['TimeStamp'] == start_date) & (ectsd['ID'] == tool)]
+            print(row)
+            try:
+                start_index_to_fill = ectsd[(ectsd['TimeStamp'] == start_date) & (ectsd['ID'] == tool)].index[0]
+            except IndexError:
+                break
+            print(start_index_to_fill)
+            for index_clean_data in ectsd.index:
+                ectsd.loc[start_index_to_fill + index_clean_data, 'used'] = int(1)
+                if index_clean_data > duration - 1:
                     break
-        clean_data_list.append(clean_data)
 
-    clean_time_series_data = pd.DataFrame()
-    for clean_data in clean_data_list:
-        clean_time_series_data = clean_time_series_data._append(clean_data, ignore_index=True)
+    clean_time_series_data_file_path = file_path[:-4] + "_filtered_clean.xlsx"
+    # done to fix the path for .to_excel() to work
+    clean_time_series_data_file_path = clean_time_series_data_file_path.replace("/", "\\")
+    ectsd.to_excel(clean_time_series_data_file_path, index=False)
 
-    clean_time_series_data_file_path = file_path[:-4] + "_filtered.xlsx"
-    clean_time_series_data_file_path = clean_time_series_data_file_path.replace("/", "\\") # done to fix the path for .to_excel() to work
-    clean_time_series_data.to_excel(clean_time_series_data_file_path)
-
-    return clean_time_series_data
+    return ectsd
 
 
 def plot_data(data):
@@ -271,8 +336,10 @@ def plot_data(data):
 
     else:
         sns.set_theme(style="darkgrid")
-        sns.kdeplot(data=data, x="TimeStamp", hue="ID", fill=True, common_norm=False, alpha=.5, linewidth=0)
-        sns.kdeplot(data=data, x="TimeStamp", hue="ID", bw_adjust=.2)
+        sns_plot1 = sns.kdeplot(data=data, x="TimeStamp", hue="ID", fill=True, common_norm=False, alpha=.5, linewidth=0)
+        sns_plot1_figure = sns_plot1.get_figure()
+        sns_plot1_figure.savefig('static/imgs/sns_plot1.png')
+        #sns.kdeplot(data=data, x="TimeStamp", hue="ID", bw_adjust=.2)
         plt.show()
         plt.close()
 
@@ -287,11 +354,23 @@ def plot_data(data):
 
 def main(path, map_dict):
     print("Starting Data Processing...\n")
-    global file_path, tool_marker_map_dict
+    global file_path, tool_marker_map_dict, flag_for_empty_data_append_override
     file_path = path
     tool_marker_map_dict = map_dict
-
     entire_data = pd.read_csv(file_path, sep=',')
+
+    # create a copy of the excel
+    excel_copy_path = file_path[:-4] + "_copy.csv"
+
+    if os.path.exists(excel_copy_path):
+        prev_entire_data = pd.read_csv(excel_copy_path, sep=',')
+        appended_data = entire_data[entire_data.index >= len(prev_entire_data)]
+        appended_data = appended_data.reset_index(drop=True)
+        entire_data = entire_data.reset_index(drop=True)  # drop index and update prev excel
+        entire_data.to_csv(excel_copy_path)  # update prev excel
+        entire_data = appended_data  # in the new iteration the entire data is only the appended data
+    else:
+        entire_data.to_csv(excel_copy_path, index=False)
 
     # add the 'used' column, to see if the tool was used or not
     entire_data['used'] = 'na'
@@ -301,9 +380,30 @@ def main(path, map_dict):
     print("Starting Split and Group...\n")
     data_list_time_grouped = split_and_group_data(entire_data)
 
+    # code used when processingAndVisualization needs to be used without appending any data
+    if not data_list_time_grouped:
+        print("\nEmpty data in 'Split and Group' step i.e no new data was appended, no further steps were attempted.")
+        print("\nThe system is deigned to stop if no new data is appended to save computations. Do you wish to override"
+              " this and plot the graph of the already existing data instead?")
+        choice = input("'y' for yes | 'n' for no\n")
+
+        if choice == 'y':
+            entire_data = pd.read_csv(file_path, sep=',')
+            entire_data['used'] = 'na'
+            print("Starting Split and Group...\n")
+            flag_for_empty_data_append_override = 1
+            data_list_time_grouped = split_and_group_data(entire_data)
+
+        elif choice == 'n':
+            return
+        else:
+            print("Unexpected input, exiting.")
+            return
+
     # calculating based on co-ordinate changes if the tool is being used or not
     print("Starting tool usage estimation...\n")
-    data_with_tool_used_calc = calculate_tool_usage(data_list_time_grouped)
+    data_with_tool_used_calc = calculate_tool_usage(data_list_time_grouped, flag_for_empty_data_append_override)
+    flag_for_empty_data_append_override = 0
 
     # Converting time stamp data to date time format for easier time calculations
     data_with_tool_used_calc['TimeStamp'] = pd.to_datetime(data_with_tool_used_calc['TimeStamp'])
@@ -311,6 +411,9 @@ def main(path, map_dict):
     # Calculations to process and data and suggest thr order of the tool usage
     print("Starting tool order calculations...\n")
     suggested_order_data = suggest_order(data_with_tool_used_calc)
+
+    # Creating clean data
+    print("Creating clean data...\n")
     clean_ordered_data = create_clean_data(suggested_order_data)
 
     print("Order of the Tool usage is: \n")
@@ -320,12 +423,8 @@ def main(path, map_dict):
     plot_data(data_with_tool_used_calc)
 
     print("Plotting smoothened/cleaned data...\n")
-    #plot_data(clean_ordered_data)
-
-    generated_file_path = file_path[:-4] + "_with_tool_usage_stats.xlsx" # do not put quotes at the beginning and the end
-    generated_file_path = generated_file_path.replace("/", "\\")  # done to fix the path for .to_excel() to work
-    data_with_tool_used_calc.to_excel(generated_file_path)
+    plot_data(clean_ordered_data)
 
 
 if __name__ == "__main__":
-    main()
+    main("C:/Users/kmmit/Desktop/Aruco Project/Mithil/Mithil.csv", {"2": "Hammer", "1": "Chisel", "0": "Screwdriver"})

@@ -161,6 +161,8 @@
                 contentType: "application/json",
                 dataType: "json",
                 data: JSON.stringify(json_data)});
+
+            $('#start').prop('disabled', true);
         }
         document.getElementById("start").addEventListener("click", start_stream);
 

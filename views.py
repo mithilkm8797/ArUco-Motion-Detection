@@ -1,16 +1,21 @@
 from flask import Blueprint, render_template, request, redirect, jsonify, Response
+
 import json
+
 import arucoDetection as AD
+import processingAndVisualization as PV
 
 views = Blueprint(__name__, "views")
 
 file_exists = False
 filename = "Data"
 folder = "C:/Users/kmmit/Desktop/Aruco Project/"
-file_path = "C:/Users/kmmit/Desktop/Aruco Project/Data/Data.csv"
+file_path = ""
+#file_path = "C:/Users/kmmit/Desktop/Aruco Project/Data/Data.csv"
 
 tool_list = ["Hammer", "Chisel", "Screwdriver"]
 marker_list = ["2", "1", "0"]
+tool_marker_map_dict = {"2": "Hammer", "1": "Chisel", "0": "Screwdriver"}
 
 choice = "a"
 
@@ -21,9 +26,8 @@ def home():
         global filename, file_path, folder, tool_list, file_exists
 
         # default values assigned
-        file_path = "C:/Users/kmmit/Desktop/Aruco Project/Data/Data.csv"
+        # file_path = "C:/Users/kmmit/Desktop/Aruco Project/Data/Data.csv"
         folder = "C:/Users/kmmit/Desktop/Aruco Project/"
-
         filename = request.form.get('filename')
         file_path = folder + filename + "/" + filename + ".csv"
         tools = request.form.get('tools')
@@ -35,11 +39,11 @@ def home():
 
 @views.route("/file_creation", methods=['GET', 'POST'])
 def file_creation():
-    global file_exists, filename, file_path, marker_list
+    global file_exists, filename, file_path, marker_list, tool_marker_map_dict
     if request.method == 'POST':
         marker_list = request.form.get('map')
         marker_list = AD.markers_to_list(marker_list)
-        AD.create_tools_marker_map_dict()
+        tool_marker_map_dict = AD.create_tools_marker_map_dict()
         return redirect("/detection")
     return render_template("file_creation.html", file_exists=file_exists, filename=filename, file_path=file_path, tools=tool_list)
 
@@ -57,7 +61,8 @@ def detection():
 
 @views.route("/visualizations")
 def visualization():
-    AD.main()
+    global file_path, tool_marker_map_dict
+    PV.main(file_path, tool_marker_map_dict)
     return render_template("visualizations.html")
 
 
