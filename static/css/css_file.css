@@ -56,7 +56,7 @@ body {
   line-height: 1.5;
   color: #212529;
   text-align: left;
-  background-color: #fff;
+  background-image: url('/static/imgs/background.jpg')
 }
 
 [tabindex="-1"]:focus {
@@ -1806,25 +1806,28 @@ pre code {
 }
 
 .table {
-  width: 100%;
+  width: 30%;
   margin-bottom: 1rem;
   color: #212529;
+  border: 2px solid #dee2e6;
 }
 
 .table th,
-.table td {
+.table td,
+.table tr{
   padding: 0.75rem;
   vertical-align: top;
-  border-top: 1px solid #dee2e6;
+  border-top: 1px solid #000000;
+  border-right: 1px solid #000000;
 }
 
 .table thead th {
   vertical-align: bottom;
-  border-bottom: 2px solid #dee2e6;
+  border-bottom: 2px solid #000000;
 }
 
 .table tbody + tbody {
-  border-top: 2px solid #dee2e6;
+  border-top: 2px solid #000000;
 }
 
 .table-sm th,
@@ -1833,12 +1836,12 @@ pre code {
 }
 
 .table-bordered {
-  border: 1px solid #dee2e6;
+  border: 1px solid #000000;
 }
 
 .table-bordered th,
 .table-bordered td {
-  border: 1px solid #dee2e6;
+  border: 1px solid #000000;
 }
 
 .table-bordered thead th,
@@ -1872,7 +1875,7 @@ pre code {
 .table-primary td,
 .table-primary thead th,
 .table-primary tbody + tbody {
-  border-color: #f7adad;
+  border-color: #000000;
 }
 
 .table-hover .table-primary:hover {
@@ -2155,7 +2158,7 @@ pre code {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
-  color: #d4f314;
+  color: #e8f1fa;
   background-color: rgba(0, 0, 0, 0.01);
   background-clip: padding-box;
   border: 1px solid #ced4da;
@@ -2177,11 +2180,11 @@ pre code {
 }
 
 .form-control:focus {
-  color: #d4f314;
+  color: #e8f1fa;
   background-color: rgba(0, 0, 0, 0.01);
-  border-color: #fbd5d5;
+  border-color: #00549f;
   outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(240, 97, 97, 0.25);
+  box-shadow: 0 0 0 0.2rem rgba(64,127,183, 0.25);
 }
 
 .form-control::-webkit-input-placeholder {
@@ -6282,7 +6285,7 @@ a.close.disabled {
 
 .modal-open .modal {
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: scroll;
 }
 
 .modal {
@@ -6293,7 +6296,6 @@ a.close.disabled {
   display: none;
   width: 100%;
   height: 100%;
-  overflow: hidden;
   outline: 0;
 }
 
@@ -6402,6 +6404,7 @@ a.close.disabled {
       -ms-flex-direction: column;
           flex-direction: column;
   width: 100%;
+  height: 50%
   pointer-events: auto;
   background-color: #fff;
   background-clip: padding-box;
@@ -11309,7 +11312,6 @@ p {
 .navbar.affix {
   padding-top: 0.8rem;
   padding-bottom: 0.8rem;
-  border-bottom: 1px solid #dee2e6;
 }
 
 .navbar.affix.bg-light {
@@ -11540,9 +11542,9 @@ pre .code {
   position: relative;
   height: 100vh;
   min-height: 600px;
-  background-image: url(../imgs/header.jpg);
   background-size: cover;
   background-position: center;
+  background-repeat: repeat-y;
   display: -webkit-box;
   display: -ms-flexbox;
   display: -webkit-flex;
@@ -11560,11 +11562,11 @@ pre .code {
   left: 0;
   width: 100%;
   height: 100%;
-  background: #2C3E50;
   opacity: .76;
 }
 
 .header .carousel {
+  background: rgb(44, 62, 80, 0.5);
   -webkit-box-flex: 1;
   -webkit-flex-grow: 1;
       -ms-flex-positive: 1;
@@ -11572,6 +11574,7 @@ pre .code {
   width: 100%;
   text-align: left;
   padding: 20px 0;
+  background-repeat: repeat-x;
   display: -webkit-box;
   display: -ms-flexbox;
   display: -webkit-flex;
@@ -11732,4 +11735,12 @@ pre .code {
   top: 0;
   padding-right: 35px;
   padding-top: 15px;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+
+table, th, td {
+  border:1px solid black;
 }

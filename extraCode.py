@@ -190,3 +190,75 @@ for index in data_2.index:
 entire_processed_data = pd.concat([data_0, data_1, data_2], ignore_index=True)
 
 return entire_processed_data
+
+generated_file_path_csv = file_path[
+                                      :-4] + "_with_tool_usage_stats.csv"
+            data_with_tool_used_calc = pd.read_csv(generated_file_path_csv, sep=',')
+            data_with_tool_used_calc['TimeStamp'] = pd.to_datetime(data_with_tool_used_calc['TimeStamp'])
+            plot_data(data_with_tool_used_calc)
+            return
+
+----------------
+#for key, value in tool_marker_map_dict.items():
+    #    clean_data['ID'] = value
+    #    clean_data_list.append(clean_data[:])  # shallow copy (if you just send clean_data, you are actually just
+    # sending a reference to clean_data. Hence, at the end of the loop, clean_data_list will have the all the
+    # elements inside it same as the latest value of clean_data.
+
+clean_data_list_new = []
+    for (df, clean_df) in zip(data_list, clean_data_list):
+        #print("before\n")
+        #for data in clean_data_list_new:
+            #print(data, "\n")
+        for index_in_df in df.index:
+            duration = int(df['Duration'].iloc[index_in_df])
+            start_date = df['StartDate'].iloc[index_in_df]
+            start_index_to_fill = clean_data[clean_data['TimeStamp'] == start_date].index[0]
+            for index_in_clean_df in clean_df.index:
+                clean_df.loc[start_index_to_fill + index_in_clean_df, 'used'] = int(1)
+                if index_in_clean_df > duration - 1:
+                    break
+        clean_data_list_new.append(clean_df[:])
+        #print(id(clean_df))
+        #print("After\n")
+        #for data in clean_data_list_new:
+            #print(data, "\n")
+
+    clean_time_series_data = pd.DataFrame()
+    for clean_data in clean_data_list_new:
+        print(id(clean_data))
+        clean_time_series_data = clean_time_series_data._append(clean_data, ignore_index=True)
+
+    clean_time_series_data_file_path = file_path[:-4] + "_filtered_clean.xlsx"
+    # done to fix the path for .to_excel() to work
+    clean_time_series_data_file_path = clean_time_series_data_file_path.replace("/", "\\")
+    clean_time_series_data.to_excel(clean_time_series_data_file_path, index=False)
+
+    return clean_time_series_data
+
+
+inputs.forEach((input) => {
+            input.addEventListener('input', () => {
+                let id = event.target.getAttribute('id');
+                if (event.target.value.length > 0) {
+                    inputValidator[id] = true;
+                }
+                else {
+                    inputValidator[id] = false;
+                };
+
+                let allTrue = Object.keys(inputValidator).every((item) => {
+                    return inputValidator[item] === true
+                });
+
+                if (allTrue) {
+                    buttonSend.disabled = false;
+                }
+                else {
+                    buttonSend.disabled = true;
+                }
+            })
+        })
+div_to_append.appendChild(newTool, newMarker);
+
+          formfield.appendChild(div_to_append)

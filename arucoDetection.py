@@ -6,9 +6,12 @@ import os
 import numpy as np
 import shutil
 
+from cv2 import aruco
+
 import processingAndVisualization as PV
 
-folder = "C:/Users/kmmit/Desktop/Aruco Project/"
+default_folder = "C:/Users/kmmit/Desktop/Aruco Project/"
+folder = ""
 filename = "Data"
 file_path = "C:/Users/kmmit/Desktop/Aruco Project/Data/Data.csv"
 
@@ -93,6 +96,7 @@ def aruco_display(corners, ids, image):
             ]
             with open(file_path, "a", encoding="UTF8", newline='') as csv_file:
                 writer = csv.DictWriter(csv_file, fieldnames=headers)
+                writer = csv.DictWriter(csv_file, fieldnames=headers)
                 writer.writerows(rows)
 
     return image
@@ -139,7 +143,7 @@ def check_file(filename_received):
     global folder, file_path, filename
 
     filename = filename_received.strip()  # strip() to remove unwanted leading and trailing spaces
-    folder = folder + filename
+    folder = default_folder + filename
     file_path = folder + "/" + filename + ".csv"
     file_exists = os.path.exists(file_path)
     print(file_path + ": " + str(file_exists))
@@ -195,6 +199,8 @@ def create_tools_marker_map_dict():
     print("\nCreating marker and tool dictionary...")
     print("The dictionary is: ", tool_marker_map_dict)
 
+    return tool_marker_map_dict
+
 
 def file_handling(choice):
     """
@@ -226,7 +232,7 @@ def file_handling(choice):
             writer.writeheader()
         print("The file " + "\'" + filename + ".csv\' with path: " + "\"" + file_path + "\"" + " was created.")
     elif choice == "a":
-        print("Appending data to " + filename + "with path: " + file_path)
+        print("Appending data to " + "\'" + filename + ".csv\' with path: " + "\"" + file_path + "\"" )
     else:
         print("Did not receive the right choice!")
 
@@ -283,7 +289,6 @@ def detection():
         # img = cv2.resize(img, (width, height), interpolation=cv2.INTER_CUBIC)
 
         corners, ids, rejected = cv2.aruco.detectMarkers(img, arucoDict, parameters=arucoParams)
-
         detected_image = aruco_display(corners, ids, img)
 
         # Use the below code for augmenting ArUco and assigning custom images to ArUco markers. TODO: future scope
@@ -319,6 +324,7 @@ def detection():
 
 def main():
     global file_path
+    detection()
     PV.main(file_path, tool_marker_map_dict)
 
 

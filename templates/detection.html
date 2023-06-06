@@ -30,7 +30,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item ml-0 ml-lg-4">
-                        <a class="nav-link btn btn-primary" href="about.html">About</a>
+                        <a class="nav-link btn btn-info" style="border-radius: 5px" href="about.html">About</a>
                     </li>
 
                 </ul>
@@ -49,7 +49,7 @@
                         <div class="form-row">
                             <div class="col form-group">
                                  <center>
-                                     <h2 class="subtitle font-weight-normal" style="color:rgb(216, 67, 97);"><b>Detection</b></h2>
+                                     <h2 class="subtitle font-weight-normal" style="color:rgb(64,127,183);"><b>Detection</b></h2>
                                 </center>
                              </div>
                         </div>
@@ -60,46 +60,29 @@
                                 </center>
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="col form-group">
-                                <center>
-                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"><br></h6>
-                                </center>
-                            </div>
-                        </div>
-                        <div style="background-color:rgb(0, 0, 0, 0.3);padding-top:20px;">
+                        <div style="background-color:rgb(0, 0, 0, 0.3);padding-top:20px;padding-bottom:20px;">
+                            <div class="form-row">
+                                <div class="col form-group">
+                                    <center>
+                                        <h6 class="subtitle font-weight-normal" style="color:aliceblue"> Please close the <i>'Video Stream Window'</i> to stop detection<br></h6>
+                                    </center>
+                                </div>
+                             </div>
                             <div class="form-row">
                                 <div class="col form-group">
                                      <center>
                                         <div>
-                                            <button id="start" name="start" type="button" class="btn" style="background-color: #4CAF50;" onclick="send_stream();modal_init();show_chkbx();">&nbsp;&nbsp; Start Video Stream &nbsp;&nbsp;</button>
+                                            <button id="start" name="start" type="button" class="btn" style="background-color: #4CAF50;border-radius: 5px" onclick="modal_close_warning();">&nbsp;&nbsp; Start Video Stream &nbsp;&nbsp;</button>
                                         </div>
                                     </center>
                                  </div>
                             </div>
-                            <div class="form-row">
-                                <div class="col form-group">
-                                    <center>
-                                        <br>
-                                        <h6 class="subtitle font-weight-normal" style="color:aliceblue"> Note:<br></h6>
-                                        <h6 class="subtitle font-weight-normal" style="color:aliceblue"> Close the <i>'Video Stream Window'</i> to stop detection<br></h6>
-                                    </center>
-                                </div>
-                             </div>
                         </div>
                         <div style="background-color:rgb(0, 0, 0, 0.3);padding-top:20px;margin-top:20px;">
                             <div class="form-row">
                                 <div class="col form-group">
                                     <center>
-                                        <label class="subtitle font-weight-normal" id="agree_lbl" style="color:aliceblue;display:none;"><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tick the checkbox if you would like to stop further detections and proceed to Visualizations</label>
-                                        <input type="checkbox" id="agree_chkbx" autocomplete="off" name="agree_chkbx" value="agree" style="display:none;">
-                                    </center>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="col form-group">
-                                    <center>
-                                        <button type="button" style="display:none;" id="to_visuals" name="to_visuals" class="btn btn-primary btn-block" onclick="window.location.href='/visualizations'">To Visualization &nbsp;&nbsp;<b style="font-size:18px;">></b></button>
+                                        <button type="button" style="display:none;background-color:rgb(64,127,183)" id="to_visuals" name="to_visuals" class="btn btn-block" onclick="window.location.href='/visualizations'">To Visualizations &nbsp;&nbsp;<b style="font-size:18px;">></b></button>
                                     </center>
                                 </div>
                             </div>
@@ -134,7 +117,39 @@
             </center>
         </div>
     </div>
-
+    <div id="modal_info" class="modal" >
+        <div class="modal-content" style="margin-top:120px;border-radius:20px">
+            <center>
+                <div style="background-color: rgb(255, 204, 0, 0.4);padding-bottom:20px;border-radius:20px">
+                    <p style="background-color: rgb(237, 62, 62, 0.4);padding-top:10px;padding-bottom:10px;border-radius:20px 20px 0px 0px;color:red"><b>Important NOTE:</b></p>
+                    <p style="padding-top:10px;">
+                        <br>
+                        <i> The <u>minimum requirement</u> for correct results is that the Aruco markers attached to the tools
+                            <br>
+                            are detected <b>entirely/correctly</b> at <u>all times</u> when the tool is not being used (at rest).</i>
+                        <div style="padding-bottom:10px;">Click <a href="/tips" target="_blank">here</a> for tips.</div>
+                    </p>
+                    <button type="button" id="understood" name="understood" class="btn btn-primary btn-block" style="border-radius: 5px" onclick="modal_close()">Understood </button>
+                </div>
+            </center>
+        </div>
+    </div>
+    <div id="modal_warning" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content" style="margin-top:120px;border-radius:20px">
+          <p>
+            <center>
+                <div style="background-color: rgb(255, 204, 0, 0.4);padding-bottom:20px;border-radius:20px">
+                    <p style="background-color: rgb(237, 62, 62, 0.4);padding-top:10px;padding-bottom:10px;border-radius:20px 20px 0px 0px;color:red"><b> NOTE: </b></p>
+                    <p style="padding-top:10px;">
+                        To stop the detection please remember to close the Video Stream Window.
+                    </p>
+                    <button type="button" id="understood1" name="understood1" class="btn btn-primary btn-block" style="border-radius: 5px" onclick="modal_close();send_stream();modal_init();">Understood </button>
+                </div>
+            </center>
+          </p>
+        </div>
+	</div>
 	<!-- core  -->
     <script src="/static/vendors/jquery/jquery-3.4.1.js"></script>
     <script src="/static/vendors/bootstrap/bootstrap.bundle.js"></script>
@@ -148,9 +163,43 @@
     <!-- Script js -->
     <script src="/static/js/scripts.js"></script>
 
+    <script src="/static/js/disable_browser_back_button.js"></script>
+
     <script type="text/javascript">
 
-        function start_stream(){
+        //display info modal on window load
+        $(window).on('load', function() {
+            $('#modal_info').modal({
+                backdrop: 'static',
+                keyboard: false
+            })
+            $('#modal_info').modal('show');
+            $(".modal-backdrop").remove();
+            /*var span = document.getElementsByClassName("close")[0];
+            /span.onclick = function() {
+                $('#modal_file_exists').modal('hide');
+            }
+            */
+        });
+
+        // Close the modal
+        function modal_close(){
+            $('#modal_info').modal('hide');
+            $('#modal_warning').modal('hide');
+        }
+
+        // Display Warning modal to close the video stream
+        function modal_close_warning(){
+            $('#modal_warning').modal({
+                backdrop: 'static',
+                keyboard: false
+            })
+            $('#modal_warning').modal('show');
+            $(".modal-backdrop").remove();
+        }
+
+        // Function to indicate detection is done
+        function send_stream(){
 
             var data = "send"
             var json_data = JSON.stringify(data);
@@ -161,9 +210,11 @@
                 contentType: "application/json",
                 dataType: "json",
                 data: JSON.stringify(json_data)});
-        }
-        document.getElementById("start").addEventListener("click", start_stream);
 
+            $('#start').prop('disabled', true);
+        }
+
+        // Initialization modal display
         function modal_init(){
             $('#modal_init').modal({
                 backdrop: 'static',
@@ -171,32 +222,8 @@
             })
             $('#modal_init').modal('show');
             $(".modal-backdrop").remove();
-            setTimeout(function() {$('#modal_init').modal('hide');}, 5000);
+            setTimeout(function() {$('#modal_init').modal('hide');}, 3000);
         }
-        document.getElementById("start").addEventListener("click", modal_init);
-
-        function show_chkbx(){
-            document.getElementById('agree_chkbx').style.display = "block";
-            document.getElementById('agree_lbl').style.display = "block";
-        }
-        document.getElementById("start").addEventListener("click", show_chkbx);
-
-        $(function() {
-            $('[type=checkbox]').click(function (){
-                var checkedChbx = $('[type=checkbox]:checked');
-                if (checkedChbx.length > 0)
-                {
-                    $('#to_visuals').show();
-                    $('#start').prop('disabled', true);
-                }
-                else
-                {
-                    $('#to_visuals').hide();
-                    $('#start').prop('disabled', false);
-                }
-
-            });
-        });
 
     </script>
 
