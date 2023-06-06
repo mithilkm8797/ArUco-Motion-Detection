@@ -235,3 +235,30 @@ clean_data_list_new = []
     clean_time_series_data.to_excel(clean_time_series_data_file_path, index=False)
 
     return clean_time_series_data
+
+
+inputs.forEach((input) => {
+            input.addEventListener('input', () => {
+                let id = event.target.getAttribute('id');
+                if (event.target.value.length > 0) {
+                    inputValidator[id] = true;
+                }
+                else {
+                    inputValidator[id] = false;
+                };
+
+                let allTrue = Object.keys(inputValidator).every((item) => {
+                    return inputValidator[item] === true
+                });
+
+                if (allTrue) {
+                    buttonSend.disabled = false;
+                }
+                else {
+                    buttonSend.disabled = true;
+                }
+            })
+        })
+div_to_append.appendChild(newTool, newMarker);
+
+          formfield.appendChild(div_to_append)

@@ -21,7 +21,7 @@ def split_and_group_data(entire_data):
     """
     if entire_data.empty:
         print("The data sent to split and group was empty.")
-        return False
+        return [""]
 
     # splitting data into data frames for each tool
     global tool_marker_map_dict
@@ -68,6 +68,9 @@ def calculate_tool_usage(data_list_time_grouped, flag):
 
     The flag argument comes into play when the processingAndVisualization.py needs to be run with an empty data append.
     """
+    if data_list_time_grouped.empty:
+        print("Data in the calculate usage step is empty")
+        return
 
     for data in data_list_time_grouped:
         for index in data.index:
@@ -381,7 +384,7 @@ def main(path, map_dict):
     data_list_time_grouped = split_and_group_data(entire_data)
 
     # code used when processingAndVisualization needs to be used without appending any data
-    if not data_list_time_grouped:
+    if len(data_list_time_grouped) == 0:
         print("\nEmpty data in 'Split and Group' step i.e no new data was appended, no further steps were attempted.")
         print("\nThe system is deigned to stop if no new data is appended to save computations. Do you wish to override"
               " this and plot the graph of the already existing data instead?")

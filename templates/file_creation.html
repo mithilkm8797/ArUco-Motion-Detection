@@ -30,63 +30,59 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item ml-0 ml-lg-4">
-                        <a class="nav-link btn btn-primary" href="about.html">About</a>
+                        <a class="nav-link btn btn-info" style="border-radius:5px" href="about.html">About</a>
                     </li>
                     
                 </ul>
             </div>
         </div>
     </nav>
-
     
     <header id="home_header" class="header">
         <div class="overlay"></div>
         <div id="header-carousel" class="carousel slide carousel-fade" data-ride="carousel">
             <div class="container">
                 <div class="carousel-caption d-none d-md-block">
-                <h2 style="color:rgb(216, 67, 97);text-align:center;"><b>File Creation</b></h2>
+                <h2 style="color:rgb(102, 102, 255);text-align:center;"><b>File Creation</b></h2>
                 <div  style="position: absolute;top:50%;right:43.5%;-ms-transform: translateY(-50%);transform: translateY(-50%);margin-top:50px;">
-                    <button type="button" class="btn btn-dark" onclick="window.location.href='/'"><b style="font-size:18px;"><</b> &nbsp;&nbsp;Back to Setup Phase</button>
+                    <button type="button" class="btn btn-dark" style="border-radius:5px" onclick="window.location.href='/'"><b style="font-size:18px;"><</b> &nbsp;&nbsp;Back to Setup Phase</button>
                 </div>
                     {% if file_exists %}
                         <div id="modal_file_exists" class="modal" >
-                        <h2 style="color:rgb(216, 67, 97);text-align:center;"><b>File Creation</b></h2>
-                        <!-- Modal content -->
-                        <div class="modal-content" style="margin-top:30px;">
-                          <p style="font-family:Arial;">
-                            <center>
-                                <br>
-                                <p style="background-color: rgb(237, 62, 62, 0.4);padding-top: 10px;padding-bottom: 10px;"> The file name <b style="color:red">{{ filename }}</b> already exists.</p>
-                                <br>
-                                <div style="background-color: rgb(119, 117, 118, 0.2);padding-top: 10px;padding-bottom: 20px;">
-                                    <p style="padding-bottom: 20px;">Do you want to <b>append</b> the data generated in this trial to the existing file or <b>delete</b> it to create a new file with the same name?</p>
-                                    <div style="text-align: center;">
-                                        <button id="append" name="append" type="button" class="btn" style="background-color: #4CAF50;margin-right:30px;" onclick="send_append();call_info_modal();">Append &nbsp;&nbsp;<b style="font-size:18px;">></b> </button>
-                                        <button id="delete" name="delete" type="button" class="btn btn-primary" onclick="send_delete();call_info_modal();">Delete &nbsp;&nbsp;<b style="font-size:18px;">></b></button>
-                                    </div>
-                                </div>
-                                <br>
-                                <div  style="background-color: rgb(119, 117, 118, 0.2);padding-top: 10px;padding-bottom: 20px;">
-                                    <p style="padding-bottom: 20px;">Click on the <b>Back</b> button to return to thr previous page to change the file name.</p>
-                                <button type="button" class="btn btn-dark btn-block" onclick="window.location.href='/'"><b style="font-size:18px;"><</b> &nbsp;&nbsp;Back</button>
-                                </div>
-                            </center>
-                          </p>
-                        </div>
-                    </div>
+                            <h2 style="color:rgb(64,127,183);text-align:center;"><b>File Creation</b></h2>
+                            <!-- Modal content -->
+                            <div class="modal-content" style="margin-top:30px;border-radius:20px">
+                                <p style="font-family:Arial;">
+                                    <center>
+                                        <p style="background-color: rgb(237, 62, 62, 0.4);padding-top: 10px;padding-bottom: 10px;border-radius:10px"> The file name <b style="color:red">{{ filename }}.csv </b> already exists.</p>
+                                        <div style="background-color: rgb(119, 117, 118, 0.2);padding-top: 10px;padding-bottom: 20px;border-radius:20px;margin-top:30px">
+                                            <p style="padding-bottom: 20px;">Do you want to <b>append</b> the data generated in this trial to the existing <br> file or <b>delete</b> it to create a new file with the same name?</p>
+                                            <div style="text-align: center;">
+                                                <button id="append" name="append" type="button" class="btn" style="background-color: #4CAF50;margin-right:30px;border-radius:5px" onclick="send_append();call_info_modal();">Append &nbsp;&nbsp;<b style="font-size:18px;">></b> </button>
+                                                <button id="delete" name="delete" type="button" class="btn btn-primary" style="border-radius:5px" onclick="send_delete();call_info_modal();">Delete &nbsp;&nbsp;<b style="font-size:18px;">></b></button>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div  style="background-color: rgb(119, 117, 118, 0.2);padding-top: 10px;padding-bottom: 20px;border-radius:20px">
+                                            <p style="padding-bottom: 20px;">Click on the <b>Back</b> button to return to the previous page to change the file name.</p>
+                                            <button type="button" class="btn btn-dark btn-block" style="border-radius:5px" onclick="window.location.href='/'"><b style="font-size:18px;"><</b> &nbsp;&nbsp;Back to Setup</button>
+                                        </div>
+                                    </center>
+                                </p>
+                            </div>
+                         </div>
                     {% else %}
-                        <div id="modal_file_not_exists" class="modal" >
-                            <h2 style="color:rgb(216, 67, 97);text-align:center;"><b>File Creation</b></h2>
-                            <div class="modal-content" style="margin-top:30px;">
+                        <div id="modal_file_not_exists" class="modal">
+                            <h2 style="color:rgb(64,127,183);text-align:center;"><b>File Creation</b></h2>
+                            <div class="modal-content" style="margin-top:30px;border-radius:20px">
                                 <p style="font-family:Arial;">
                                     <center>
                                         <br>
                                         <p style="background-color: rgb(76, 175, 80, 0.4);padding-top: 10px;padding-bottom: 10px;"> A new file, <b>{{ filename }}.csv</b> will be created at: <br><i>'{{ file_path }}'</i></p>
-                                        <p style="background-color: rgb(76, 175, 80, 0.4);padding-top: 10px;padding-bottom: 10px;"> <b>Tool List:</b> {{ tools }}</p>
                                         <br>
-                                        <button id="to_aruco_mapping" name="to_aruco_mapping" type="button" class="btn btn-primary" onclick="send_new_file();call_info_modal();">To ArUco Mapping &nbsp;&nbsp;<b style="font-size:18px;">></b></button>
-                                        <br><br>
-                                        <button type="button" class="btn btn-dark" onclick="window.location.href='/'"><b style="font-size:18px;">&nbsp;<</b> &nbsp; &nbsp;Back &nbsp; &nbsp;</button>
+                                        <button id="next" name="next" type="button" class="btn btn-block" style="background-color:rgb(64,127,183)" onclick="send_new_file();call_info_modal();">Next &nbsp;&nbsp;<b style="font-size:18px;">></b></button>
+                                        <br>
+                                        <button type="button" class="btn btn-dark" style="border-radius:5px" onclick="window.location.href='/'"><b style="font-size:18px;">&nbsp;<</b> &nbsp; &nbsp;Back to Setup &nbsp; &nbsp;</button>
                                     </center>
                                 </p>
                             </div>
@@ -97,43 +93,44 @@
         </div>
     </header>
 
-    <div id="modal_info" class="modal">
+    <div id="modal_info" class="modal" style="margin-top:20px">
         <!-- Modal content -->
-        <div class="modal-content">
+        <div class="modal-content modal-dialog-scrollable" style="overflow-y:scroll;border-radius:20px">
           <p>
             <center>
-                <br>
-                <p style="font-family:Arial;background-color: rgb(119, 117, 118, 0.4);padding-top: 10px;padding-bottom: 10px;"><b>ArUco Markers</b> can be generated for free <a href="https://chev.me/arucogen/" target="_blank">here.</a></p>
-                <div style="background-color: rgb(119, 117, 118, 0.3);">
-                    <form class="contact-form" method="POST" id="form_tool_aruco_map" style="padding-top:10px;padding-bottom:20px;">
+                <p style="font-family:Arial;background-color: rgb(119, 117, 118, 0.4);padding-top: 10px;padding-bottom: 10px;border-radius:10px"><b>ArUco Markers</b> can be generated for free <a href="https://chev.me/arucogen/" target="_blank"><u>here.</u></a></p>
+                <div style="background-color: rgb(119, 117, 118, 0.3);border-radius:20px">
+                    <form class="contact-form" method="POST" id="form_tool_aruco_map" style="padding-bottom:20px;">
                         <div class="form-row">
                             <div class="col form-group">
-                                 <center>
-                                     <h6 class="subtitle font-weight-normal" style="color:rgb(216, 67, 97)"><b>ArUco Marker mapping to the tools</b></h6>
-                                </center>
-                             </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col form-group">
-                                <center>
-                                    <p>The following is the tool list:</p>
-                                    <label><b>{{ tools }}</b></label>
-                                </center>
+                                <h6 class="subtitle font-weight-normal" style="color:rgb(64,127,183);padding-top:20px;padding-bottom:20px;background-color:rgb(64,127,183,0.3);border-radius: 20px 20px 0px 0px"><b>ArUco Marker mapping of the tools</b></h6>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="col form-group">
                                 <center>
-                                    <p>Please enter the ArUco marker IDs in the corresponding order you want to associate them with the tools <br>(separate them using commas):</p>
-                                    <p style="font-family:Arial;background-color: rgb(119, 117, 118, 0.4);padding-top:10px;padding-bottom:10px;"><i><b>Example:</b> <br>For a tool list <b style="font-family:Arial;">['Hammer', 'Chisel', 'Screwdriver']</b>, an input of marker IDs <b style="font-family:Arial;">5, 6, 0</b> would mean: <br> Hammer is associated with 5, Chisel with 6, and Screwdriver with 0.</i></p>
-                                    <input id="map" name="map" class="form-control" style="color:black;background-color: rgba(255, 255, 255, 1);font-family:Arial;" type="text" size="60" placeholder="Example: 5, 6, 0">
+                                    <p>The following is the tool list with their corresponding marker IDs:</p>
+                                    <table class="table" style="background-color:white">
+                                        <tr>
+                                            <th>Tool</th>
+                                            <th>Marker ID</th>
+                                        </tr>
+                                        {% for key, value in dict.items() %}
+                                        <tr>
+                                            <td>{{value}}</td>
+                                            <td>{{key}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </table>
                                 </center>
                             </div>
                         </div>
                          <div class="form-row">
                             <div class="col form-group">
                                 <center>
-                                    <button type="submit" id="to_detection" name="to_detection" class="btn btn-primary btn-block" onclick="window.location.href='/detection'">To Detection &nbsp;&nbsp;<b style="font-size:18px;">></b></button>
+                                    <button type="submit" id="to_detection" name="to_detection" class="btn btn-block" style="background-color:rgb(64,127,183);border-radius:5px" onclick="window.location.href='/detection'">To Detection &nbsp;&nbsp;<b style="font-size:18px;">></b></button>
+                                    <br>
+                                    <button type="button" class="btn btn-dark" style="border-radius:5px" onclick="window.location.href='/'"><b style="font-size:18px;">&nbsp;<</b> &nbsp; &nbsp;Back to Setup &nbsp; &nbsp;</button>
                                 </center>
                             </div>
                         </div>
@@ -195,12 +192,11 @@
                 backdrop: 'static',
                 keyboard: false
             })
+            $('#modal_file_exists').modal('hide');
+            $('#modal_file_not_exists').modal('hide');
             $('#modal_info').modal('show');
             $(".modal-backdrop").remove();
         }
-        document.getElementById("to_aruco_mapping").addEventListener("click", call_info_modal);
-        document.getElementById("append").addEventListener("click", call_info_modal);
-        document.getElementById("delete").addEventListener("click", call_info_modal);
 
         // Send append data
         function send_append(){
@@ -216,7 +212,6 @@
                 dataType: "json",
                 data: JSON.stringify(json_data)});
         }
-        document.getElementById("append").addEventListener("click", send_append);
 
         // Send delete data
         function send_delete(){
@@ -232,7 +227,6 @@
                 dataType: "json",
                 data: JSON.stringify(json_data)});
         }
-        document.getElementById("delete").addEventListener("click", send_delete);
 
         // Send new file create
         function send_new_file(){
@@ -248,7 +242,6 @@
                 dataType: "json",
                 data: JSON.stringify(json_data)});
         }
-        document.getElementById("to_aruco_mapping").addEventListener("click", send_new_file);
 
     </script>
     <script>

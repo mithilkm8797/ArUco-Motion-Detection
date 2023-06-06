@@ -20,7 +20,7 @@
 </head>
 <body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
 
-    <nav id="scrollspy" class="navbar navbar-light bg-light navbar-expand-lg fixed-top" data-spy="affix" data-offset-top="20">
+    <nav id="scrollspy" class="navbar navbar-dark bg-dark navbar-expand-lg fixed-top" data-spy="affix" data-offset-top="20">
         <div class="container">
             <a class="navbar-brand" href="#"><img src="/static/imgs/aruco_logo.png" alt="" class="brand-img"></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,7 +30,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item ml-0 ml-lg-4">
-                        <a class="nav-link btn btn-primary" href="about.html">About</a>
+                        <a class="nav-link btn btn-info" style="border-radius:5px" href="about.html">About</a>
                     </li>
                     
                 </ul>
@@ -42,14 +42,14 @@
     <header id="home_header" class="header">
         
         <div class="overlay"></div>
-        <div id="header-carousel" class="carousel slide carousel-fade" data-ride="carousel">  
+        <div id="header-carousel" class="carousel slide carousel-fade" data-ride="carousel">
             <div class="container">
                 <div class="carousel-caption d-none d-md-block">
-                    <form class="contact-form" method="POST" id="form">
+                    <form class="contact-form" action="/" method="POST" id="form" style="margin-top:80px">
                         <div class="form-row">
                             <div class="col form-group">
                                  <center>
-                                     <h2 class="subtitle font-weight-normal" style="color:rgb(216, 67, 97)"><b>Setup Phase</b></h2>
+                                     <h2 class="subtitle font-weight-normal" style="color:rgb(64,127,183)"><b>Setup Phase</b></h2>
                                      <p><br></p>
                                 </center>
                              </div>
@@ -59,7 +59,7 @@
                                 <center>
                                     <h6 class="subtitle font-weight-normal" style="color:aliceblue">Please enter the name of the file you want to store the data in:</h6>
                                     <p></p>
-                                    <input id="filename" type="text" class="form-control" size="60" name="filename" placeholder="Example: Data">
+                                    <input id="filename" type="text" class="form-control" size="60" name="filename" placeholder="Example: Data" required />
                                 </center>
                             </div>
                         </div>
@@ -73,29 +73,37 @@
                         <div class="form-row">
                             <div class="col form-group">
                                 <center>
-                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue">Please enter the name of the tools you want to use during detection: <br><br> (&nbsp;Seperate the tools using commas&nbsp;)</h6>
-                                    <p></p>
-                                    <input id="tools" type="text" class="form-control" size="80" name="tools" placeholder="Example: Hammer, Chisel, Pliers ">
+                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue">Please enter the name of the tools you want to use during detection and their corresponding ArUco marker IDs: </h6>
                                 </center>
+                            </div>
+                        </div>
+                        <div style="background-color:rgb(0, 0, 0, 0.3);width:810px;margin-left:150px;margin-right:150px;padding-bottom:10px;border-radius:20px">
+                            <div class="form-row">
+                                <h5 class="subtitle font-weight-normal" style="color:aliceblue;"><br> <b style="color:rgb(142,186,229);padding-left:280px">Tools</b></h5>
+                                <h5 class="subtitle font-weight-normal" style="color:aliceblue"><br> <b style="color:rgb(142,186,229);padding-left:120px">Marker IDs</b></h5>
+                            </div>
+                            <div id="tool_and_marker_input" class="form-group" style="padding-top:30px;">
+                                <div style="text-align:center;display:flex;padding-left:200px;padding-bottom:10px;">
+                                    <input id="tool0" name="tool0" type="text" class="form-control" placeholder="Tool name" required />
+                                    <input id="marker0" name="marker0" type="number" class="form-control" style="width:60px;margin-left:65px;font-family:Arial;" placeholder="ID" required />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div style="text-align:center;padding-top:30px;margin-left:10px">
+                                    <button type="button" id="add" name="add" class="btn" onclick="add_tool()" style="background-color: #4CAF50;margin-left:20px;margin-right:30px;border-radius:10px"> &nbsp;&nbsp;&nbsp;  <b style="font-size:20px;">+</b> &nbsp;&nbsp; Add a tool &nbsp; &nbsp;&nbsp;&nbsp;  </button>
+                                </div>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="col form-group">
                                 <center>
-                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"><br></h6>
-                                </center>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col form-group">
-                                <center>
-                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"><br></h6>
+                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"></h6>
                                 </center>
                             </div>
                         </div>
                         <div class="form-group">
                             <center>
-                                <button id="to_file_creation" name="to_file_creation" type="submit" class="btn btn-primary btn-block" disabled="disabled" onclick="window.location.href='/file_creation'"> To File Creation &nbsp;&nbsp;<b style="font-size:18px;">></b></button>
+                                <button id="to_file_creation" name="to_file_creation" type="submit" class="btn btn-block" style="background-color:rgb(64,127,183);border-radius:5px"> To File Creation &nbsp;&nbsp;<b style="font-size:18px;">></b></button>
                             </center>
                         </div>
                     </form>        
@@ -120,6 +128,57 @@
 
     <script type="text/javascript">
 
+        // Script for adding and removing tools
+        var formfield = document.getElementById('tool_and_marker_input');
+        var tool_count = 1
+        function add_tool(){
+          var newTool = document.createElement('input');
+          newTool.setAttribute('type','text');
+          newTool.setAttribute('name','tool');
+          var dynamic_id = "tool" + tool_count;
+          newTool.setAttribute('id',dynamic_id);
+          newTool.setAttribute('class','form-control');
+          newTool.setAttribute('placeholder','Tool name');
+          newTool.setAttribute('required', '');
+
+          var newMarker = document.createElement('input');
+          newMarker.setAttribute('type','number');
+          newMarker.setAttribute('name','marker');
+          dynamic_id = "marker" + tool_count
+          newMarker.setAttribute('id', dynamic_id);
+          newMarker.setAttribute('class','form-control');
+          newMarker.setAttribute('placeholder','ID');
+          newMarker.setAttribute('style', 'width:60px;margin-left:65px;font-family:Arial;');
+          newMarker.setAttribute('required', '');
+
+          var remove_button = document.createElement('input');
+          remove_button.setAttribute('type','button');
+          remove_button.setAttribute('id','remove');
+          remove_button.setAttribute('name','remove');
+          remove_button.setAttribute('class','btn btn-primary');
+          remove_button.setAttribute('onclick','remove_tool()');
+          remove_button.setAttribute('style','margin-left:20px;width:40px;height:25px;margin-top:5px;padding:0px;text-align:center;border-radius:20px');
+           remove_button.setAttribute('title','Click to remove tool');
+          remove_button.setAttribute('value','-');
+
+          var div_to_append = document.createElement('div');
+          div_to_append.setAttribute('style', 'text-align:center;display:flex;padding-left:200px;padding-bottom:10px');
+          div_to_append.appendChild(newTool);
+          div_to_append.appendChild(newMarker);
+          div_to_append.appendChild(remove_button);
+
+          formfield.appendChild(div_to_append);
+          tool_count = tool_count + 1;
+        }
+
+        function remove_tool(){
+          var div_tags = formfield.getElementsByTagName('div');
+          if(div_tags.length > 1) {
+            formfield.removeChild(div_tags[(div_tags.length) - 1]);
+          }
+           tool_count = tool_count - 1;
+        }
+
         // script for to_file_creation button disable until all input fields are filled
         let inputs = document.querySelectorAll('input');
         let buttonSend = document.getElementById('to_file_creation');
@@ -128,29 +187,6 @@
         "filename": false,
         "tools": false,
         }
-
-        inputs.forEach((input) => {
-            input.addEventListener('input', () => {
-                let id = event.target.getAttribute('id');
-                if (event.target.value.length > 0) {
-                    inputValidator[id] = true;
-                }
-                else {
-                    inputValidator[id] = false;
-                };
-
-                let allTrue = Object.keys(inputValidator).every((item) => {
-                    return inputValidator[item] === true
-                });
-
-                if (allTrue) {
-                    buttonSend.disabled = false;
-                }
-                else {
-                    buttonSend.disabled = true;
-                }
-            })
-        })
 
     </script>
     <script>
