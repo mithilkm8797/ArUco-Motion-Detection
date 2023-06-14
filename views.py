@@ -72,10 +72,11 @@ def detection():
 
 @views.route("/visualizations")
 def visualization():
-    ordered_df = PV.main()
+    ordered_df, prev_ordered_df = PV.main()
     print(type(ordered_df))
     return render_template("visualizations.html", file_exists=config.file_exists, filename=config.file_name,
-                           file_path=config.file_path, dict=config.tool_marker_map_dict, ordered_data=ordered_df)
+                           file_path=config.file_path, dict=config.tool_marker_map_dict, ordered_data=ordered_df,
+                           prev_data=prev_ordered_df)
 
 
 @views.route("/append_delete", methods=['POST', 'GET'])
