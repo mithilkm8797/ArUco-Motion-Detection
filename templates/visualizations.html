@@ -10,6 +10,9 @@
     <!-- font icons -->
     <link rel="stylesheet" href="/static/vendors/themify-icons/css/themify-icons.css">
 
+    <!-- favicon -->
+    <link rel="icon" href="/static/imgs/aruco_logo.png">
+
     <!-- owl carousel -->
     <link rel="stylesheet" href="/static/vendors/owl-carousel/css/owl.carousel.css">
     <link rel="stylesheet" href="/static/vendors/owl-carousel/css/owl.theme.default.css">
@@ -20,7 +23,7 @@
 </head>
 <body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
 
-    <nav id="scrollspy" class="navbar navbar-light bg-light navbar-expand-lg fixed-top" data-spy="affix" data-offset-top="20">
+    <nav id="scrollspy" class="navbar navbar-dark bg-dark navbar-expand-lg fixed-top" data-spy="affix" data-offset-top="20">
         <div class="container">
             <a class="navbar-brand" href="#"><img src="/static/imgs/aruco_logo.png" alt="" class="brand-img"></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,9 +33,11 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item ml-0 ml-lg-4">
-                        <a class="nav-link btn btn-primary" href="about.html">About</a>
+                        <button class="nav-link btn btn-primary" style="border-radius:5px" onclick="exit_modal()">Home</button>
                     </li>
-
+                    <li class="nav-item ml-0 ml-lg-4">
+                        <a class="nav-link btn btn-info" style="border-radius:5px" href="templates/visualizations_info.html" target="_blank"><img src="/static/imgs/info.png" alt="" class="brand-img" style="height:20px;width:20px"> &nbsp;Page Info</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -45,59 +50,126 @@
         <div id="header-carousel" class="carousel slide carousel-fade" data-ride="carousel">
             <div class="container">
                 <div class="carousel-caption d-none d-md-block">
-                    <form class="contact-form" method="POST" id="form">
+                    <form class="contact-form" method="POST" id="form" style="margin-top:80px">
                         <div class="form-row">
-                            <div class="col form-group">
-                                 <center>
-                                     <h2 class="subtitle font-weight-normal" style="color:rgb(64,127,183);"><b>Visualizations</b></h2>
-                                </center>
-                             </div>
+                                <div class="col form-group">
+                                     <center>
+                                         <h2 class="subtitle font-weight-normal" style="color:rgb(64,127,183);"><b>Visualizations</b></h2>
+                                    </center>
+                                 </div>
                         </div>
-                        <div class="form-row">
-                            <div class="col form-group">
-                                <center>
-                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"><br></h6>
-                                </center>
+                        {% if ordered_data|length > 0 %}
+                            <div class="form-row" style="background-color:rgb(0, 0, 0, 0.3);padding-top:20px;padding-bottom:10px;border-radius:20px">
+                                <div class="col form-group">
+                                    <center>
+                                        <h6 class="subtitle font-weight-normal" style="color:aliceblue;padding-top:10px">The order of the tool usage is:</h6>
+                                        <table class="table" style="background-color:white; font-family:Arial;margin-top:20px">
+                                            <tr style="width:100%">
+                                                <th style="text-align:center">Order</th>
+                                                <th style="width:150px;text-align:center">Tool</th>
+                                                <th style="width:180px;text-align:center">Start Time</th>
+                                                <th style="width:180px;text-align:center">End Time</th>
+                                                <th style="width:80px;text-align:center">Duration (seconds)</th>
+                                            </tr>
+                                            {% for index, row in ordered_data.iterrows(): %}
+                                            {% set order = index %}
+                                            {% set tool = row['ID'] %}
+                                            {% set start_time = row['StartDate'] %}
+                                            {% set end_time = row['EndDate'] %}
+                                            {% set duration = row['Duration'] %}
+                                            <tr style="text-align:center">
+                                                <td>{{order}}</td>
+                                                <td>{{tool}}</td>
+                                                <td>{{start_time}}</td>
+                                                <td>{{end_time}}</td>
+                                                <td>{{duration}}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </table>
+                                    </center>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col form-group">
-                                <center>
-                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"><br></h6>
-                                </center>
+                            <div class="form-row" style="background-color:rgb(0, 0, 0, 0.3);margin-top:20px;padding-top:20px;padding-bottom:10px;border-radius:20px">
+                                <div class="col form-group">
+                                    <center>
+                                        <h6 class="subtitle font-weight-normal" style="color:aliceblue;padding-top:10px">Combined time series plot of the tools:</h6>
+                                        <img src="static/imgs/plot_line_all_combined_cleaned.png" alt="Combined Time Series plot of the tools" width="1000" height="500">
+                                        <a id="interactive1" name="interactive1" type="button" class="btn btn-info" style="border-radius:5px;margin-top:20px" href="/combined_plot" target="_blank">Interactive Graph ➔</a>
+                                    </center>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="col form-group">
-                                <center>
-                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"><br></h6>
-                                </center>
+                            <div class="form-row" style="background-color:rgb(0, 0, 0, 0.3);margin-top:20px;padding-top:20px;padding-bottom:10px;border-radius:20px">
+                                <div class="col form-group">
+                                    <center>
+                                        <h6 class="subtitle font-weight-normal" style="color:aliceblue;padding-top:10px">Separated time series plot of the tools:</h6>
+                                        <img src="static/imgs/plot_line_all_separate_cleaned.png" alt="Separated Time Series plot of the tools" width="1000" height=auto>
+                                        <a id="interactive4" name="interactive4" type="button" class="btn btn-info" style="border-radius:5px;margin-top:20px" href="/separated_plot" target="_blank">Interactive Graph ➔</a>
+                                    </center>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col form-group">
-                                <center>
-                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"><br></h6>
-                                </center>
+                            <div class="form-row" style="background-color:rgb(0, 0, 0, 0.3);margin-top:20px;padding-top:20px;padding-bottom:10px;border-radius:20px">
+                                <div class="col form-group">
+                                    <center>
+                                        <h6 class="subtitle font-weight-normal" style="color:aliceblue;padding-top:10px">KDE (Kernel Density Estimation) plot of the tools (Variant 1):</h6>
+                                        <img src="static/imgs/plot_kde_cleaned_variant1.png" alt="KDE (Kernel Density) plot of the tools" width="1000" height="500">
+                                        <a id="interactive2" name="interactive2" type="button" class="btn btn-info" style="border-radius:5px;margin-top:20px" href="/kde_v1" target="_blank">Interactive Graph ➔</a>
+                                    </center>
+                                </div>
                             </div>
-                        </div>
+                            <div class="form-row" style="background-color:rgb(0, 0, 0, 0.3);margin-top:20px;padding-top:20px;padding-bottom:10px;border-radius:20px">
+                                <div class="col form-group">
+                                    <center>
+                                        <h6 class="subtitle font-weight-normal" style="color:aliceblue;padding-top:10px">KDE (Kernel Density Estimation) plot of the tools (Variant 2):</h6>
+                                        <img src="static/imgs/plot_kde_cleaned_variant2.png" alt="KDE (Kernel Density) plot of the tools" width="1000" height="500">
+                                        <a id="interactive3" name="interactive3" type="button" class="btn btn-info" style="border-radius:5px;margin-top:20px" href="/kde_v2" target="_blank">Interactive Graph ➔</a>
+                                    </center>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="form-row" style="background-color:rgb(0, 0, 0, 0.3);margin-top:20px;padding-top:20px;padding-bottom:10px;border-radius:20px">
+                                <div class="col form-group">
+                                    <center>
+                                        <h6 class="subtitle font-weight-normal" style="color:aliceblue;padding-top:10px">No Data to be visualized</h6>
+                                    </center>
+                                </div>
+                            </div>
+                        {% endif %}
                     </form>
                 </div>
             </div>
         </div>
 
     </header>
-    <div id="modal_init" class="modal" >
-        <div class="modal-content" style="margin-top:50px;">
+    <div id="modal_loading" class="modal" >
+        <div class="modal-content" style="margin-top:50px;border-radius:20px">
             <center>
-                <h5 style="color:rgb(237, 62, 62, 1);text-align:center;padding-top:30px;"><b>Initializing</b></h5>
+                <h5 style="color:rgb(237, 62, 62, 1);text-align:center;padding-top:30px;"><b>Loading Visualizations</b></h5>
                 <br><br>
                 <img style="margin-top:40px;margin-bottom:70px;" src="static/imgs/loading.gif" width="80" height="80">
                 <br><br>
             </center>
         </div>
     </div>
+
+    <div id="modal_exit" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content" style="margin-top:120px;border-radius:20px">
+          <p>
+            <center>
+                <div style="background-color: rgb(255, 204, 0, 0.4);padding-bottom:20px;border-radius:20px">
+                    <p style="background-color: rgb(237, 62, 62, 0.4);padding-top:10px;padding-bottom:10px;border-radius:20px 20px 0px 0px;color:red"><b> Exit </b></p>
+                    <p style="padding-top:10px;">
+                        Do you want to exit to go to the start (Setup Phase)?
+                    </p>
+                    <div style="text-align: center;">
+                        <button id="yes" name="yes" type="button" class="btn" style="background-color: #4CAF50;margin-right:30px;border-radius:5px" onclick="window.location.href='/'">Yes &nbsp;&nbsp;<b style="font-size:18px;">✔</b> </button>
+                        <button id="no" name="no" type="button" class="btn btn-primary" style="border-radius:5px" onclick="close_exit_modal()">No &nbsp;&nbsp;<b style="font-size:18px;">✖</b></button>
+                    </div>
+                </div>
+            </center>
+          </p>
+        </div>
+	</div>
 
 	<!-- core  -->
     <script src="/static/vendors/jquery/jquery-3.4.1.js"></script>
@@ -116,6 +188,32 @@
 
     <script type="text/javascript">
 
+        //display loading modal on window load
+        $(window).on('load', function() {
+            $('#modal_loading').modal({
+                backdrop: 'static',
+                keyboard: false
+            })
+            $('#modal_loading').modal('show');
+            $(".modal-backdrop").remove();
+            setTimeout(function() {$('#modal_loading').modal('hide');}, 3000);
+        });
+
+        // Display exit modal
+        function exit_modal(){
+            $('#modal_exit').modal({
+                backdrop: 'static',
+                keyboard: false
+            })
+            $('#modal_warning').modal('show');
+            $(".modal-backdrop").remove();
+        }
+
+        // Close exit modal
+        function close_exit_modal(){
+        $('#modal_exit').modal('hide');
+            $('#modal_exit').modal('hide');
+        }
     </script>
 
 </body>

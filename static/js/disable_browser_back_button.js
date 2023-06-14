@@ -1,4 +1,4 @@
-// Disabling going back
+// Disabling going back on the detection page
         (function (global) {
 
         if(typeof (global) === "undefined") {
@@ -35,3 +35,4 @@
                 };
             }
         })(window);
+
