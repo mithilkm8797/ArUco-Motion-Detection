@@ -9,15 +9,16 @@ import shutil
 from cv2 import aruco
 
 import processingAndVisualization as PV
+import config as config
 
-default_folder = "C:/Users/kmmit/Desktop/Aruco Project/"
-folder = ""
-filename = "Data"
-file_path = "C:/Users/kmmit/Desktop/Aruco Project/Data/Data.csv"
+#default_folder = "C:/Users/kmmit/Desktop/Aruco Project/"
+#folder = ""
+#filename = "Data"
+#file_path = "C:/Users/kmmit/Desktop/Aruco Project/Data/Data.csv"
 
-tool_list = ["Hammer", "Chisel", "Screwdriver"]
-marker_list = ["2", "1", "0"]
-tool_marker_map_dict = {"2": "Hammer", "1": "Chisel", "0": "Screwdriver"}
+#tool_list = ["Hammer", "Chisel", "Screwdriver"]
+#marker_list = ["2", "1", "0"]
+#tool_marker_map_dict = {"2": "Hammer", "1": "Chisel", "0": "Screwdriver"}
 
 ARUCO_DICT = {
     "DICT_4X4_50": cv2.aruco.DICT_4X4_50,
@@ -56,7 +57,6 @@ def aruco_display(corners, ids, image):
     with the x and y co-ordinates are recorded and stored in an Excel sheet.
     """
 
-    global file_path, tool_marker_map_dict
     if len(corners) > 0:
         ids = ids.flatten()
 
@@ -78,7 +78,7 @@ def aruco_display(corners, ids, image):
             centerY = int((topLeft[1] + bottomRight[1]) / 2.0)
             cv2.circle(image, (centerX, centerY), 4, (0, 0, 255), -1)
 
-            tool_name = tool_marker_map_dict.get(str(markerID))
+            tool_name = config.tool_marker_map_dict.get(str(markerID))
 
             cv2.putText(image, tool_name, (topLeft[0], topLeft[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
 
@@ -94,7 +94,7 @@ def aruco_display(corners, ids, image):
                     'Y-co': float(centerY)
                 }
             ]
-            with open(file_path, "a", encoding="UTF8", newline='') as csv_file:
+            with open(config.file_path, "a", encoding="UTF8", newline='') as csv_file:
                 writer = csv.DictWriter(csv_file, fieldnames=headers)
                 writer = csv.DictWriter(csv_file, fieldnames=headers)
                 writer.writerows(rows)
@@ -113,7 +113,7 @@ def augmentAruco(corners, id, img, drawId=True):
     This function is aimed at assigning custom images to the ArUco markers. The function is incomplete and may not work
     fully. It was an experiment to test the augmentation functionality. It can be used to further improve this tool.
     """
-    imgAug = cv2.imread("Images/axe png.png")
+    imgAug = cv2.imread("static/imgs/axe png.png")
     (topLeft, topRight, bottomRight, bottomLeft) = corners
 
     topRight = (int(topRight[0]), int(topRight[1]))
@@ -140,11 +140,14 @@ def check_file(filename_received):
     a boolean value based on the existence of the file.
     """
 
-    global folder, file_path, filename
+    default_folder = config.default_folder
 
     filename = filename_received.strip()  # strip() to remove unwanted leading and trailing spaces
+    config.file_name = filename
     folder = default_folder + filename
+    config.folder = folder
     file_path = folder + "/" + filename + ".csv"
+    config.file_path = file_path
     file_exists = os.path.exists(file_path)
     print(file_path + ": " + str(file_exists))
     return file_exists
@@ -157,8 +160,6 @@ def tools_to_list(tools):
 
     The function converts string of tools to list of tools and returns it.
     """
-
-    global tool_list
     stripped_tool_list = []
     tool_list = tools.split(',')
     for tool in tool_list:
@@ -177,7 +178,6 @@ def markers_to_list(markers):
     The function converts string of markers to list of markers and returns it.
     """
 
-    global marker_list
     stripped_marker_list = []
     marker_list = markers.split(',')
     for marker in marker_list:
@@ -190,11 +190,12 @@ def markers_to_list(markers):
 
 def create_tools_marker_map_dict():
     """
-    The function takes global variables: marker_list and tool_list,  to create a dictionary: tool_marker_map_dict with
+    The function takes config variables: marker_list and tool_list,  to create a dictionary: tool_marker_map_dict with
     keys as markers IDs (string) and values as Tool names (string).
     """
 
-    global tool_marker_map_dict, marker_list, tool_list
+    marker_list = config.marker_list
+    tool_list = config.tool_list
     tool_marker_map_dict = dict(zip(marker_list, tool_list))
     print("\nCreating marker and tool dictionary...")
     print("The dictionary is: ", tool_marker_map_dict)
@@ -210,8 +211,10 @@ def file_handling(choice):
     This function is responsible for the initial file handling and setup. Based on the user input to create a new file,
     or append or delete, the corresponding respective actions are handled. It returns the choice back.
     """
+    folder = config.folder
+    filename = config.file_name
+    file_path = config.file_path
 
-    global folder, file_path, filename
     headers = ['TimeStamp', 'ID', 'X-co', 'Y-co']
     if choice == "new":
         os.mkdir(folder)
@@ -221,8 +224,8 @@ def file_handling(choice):
     elif choice == "d":
         try:
             shutil.rmtree(folder, ignore_errors=True)
-            print(
-                "The folder containing the file " + "\'" + filename + ".csv\' with path: " + "\"" + file_path + "\"" + " was deleted.")
+            print("The folder containing the file " + "\'" + filename + ".csv\' with path: " + "\"" + file_path +
+                  "\"" + " was deleted.")
         except FileNotFoundError:
             print("File not found!")
 
@@ -265,7 +268,7 @@ def detection():
     # Android users. The system and the phone must be connected to the same Wi-Fi, and the IP address can be given as
     # the input to cv2.VideoCapture(3) TODO: ip address as input or the below code?? is it true?
 
-    capture = cv2.VideoCapture(3)
+    capture = cv2.VideoCapture(1)
     # address = "https://192.168.178.147:8080/video"
     # capture.open(address)
 
@@ -323,11 +326,9 @@ def detection():
 
 
 def main():
-    global file_path
     detection()
-    PV.main(file_path, tool_marker_map_dict)
+    PV.main()
 
 
 if __name__ == "__main__":
-    default_data = {'filename': 'Data', 'tools': 'hammer, chisel, screwdriver'}
     main()

@@ -5,10 +5,15 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
+import mpld3
+import itertools
 
-file_path = "C:/Users/kmmit/Desktop/Aruco Project/Data/Data.csv"
-tool_marker_map_dict = {"2": "Hammer", "1": "Chisel", "0": "Screwdriver"}
-flag_for_empty_data_append_override = 0
+from bokeh.models import DatetimeTickFormatter
+from bokeh.palettes import Dark2_5 as palette
+from bokeh.plotting import figure, show, output_file
+
+import config as config
+
 
 def split_and_group_data(entire_data):
     """
@@ -21,12 +26,11 @@ def split_and_group_data(entire_data):
     """
     if entire_data.empty:
         print("The data sent to split and group was empty.")
-        return [""]
+        return []
 
     # splitting data into data frames for each tool
-    global tool_marker_map_dict
     data_list = []
-    for key, value in tool_marker_map_dict.items():
+    for key, value in config.tool_marker_map_dict.items():
         data_list.append(entire_data[entire_data['ID'] == value])
 
     # remove empty data frames for cases when a certain tool is not used
@@ -46,7 +50,7 @@ def split_and_group_data(entire_data):
         combined_data_for_excel = combined_data_for_excel._append(data, ignore_index=True)
         combined_data_for_excel = combined_data_for_excel._append(empty_row, ignore_index=True)
 
-    generated_file_path = file_path[
+    generated_file_path = config.file_path[
                           :-4] + "_split_group.xlsx"  # do not put quotes at the beginning and the end
     generated_file_path = generated_file_path.replace("/", "\\")  # done to fix the path for .to_excel() to work
     combined_data_for_excel.to_excel(generated_file_path, index=False)  # index=False prevent index input in excel
@@ -68,7 +72,7 @@ def calculate_tool_usage(data_list_time_grouped, flag):
 
     The flag argument comes into play when the processingAndVisualization.py needs to be run with an empty data append.
     """
-    if data_list_time_grouped.empty:
+    if len(data_list_time_grouped) == 0:
         print("Data in the calculate usage step is empty")
         return
 
@@ -107,16 +111,18 @@ def calculate_tool_usage(data_list_time_grouped, flag):
             data_with_tool_used_calc = data_with_tool_used_calc._append(row_to_add_unused_entry, ignore_index=True)
             counter += 1
 
-    generated_file_path_xlsx = file_path[
-                          :-4] + "_with_tool_usage_stats.xlsx"  # do not put quotes at the beginning and the end
-    generated_file_path_xlsx = generated_file_path_xlsx.replace("/", "\\")  # done to fix the path for .to_excel() to work
+    generated_file_path_xlsx = config.file_path[
+                               :-4] + "_with_tool_usage_stats.xlsx"  # do not put quotes at the beginning and the end
+    generated_file_path_xlsx = generated_file_path_xlsx.replace("/",
+                                                                "\\")  # done to fix the path for .to_excel() to work
 
-    generated_file_path_csv = file_path[
-                               :-4] + "_with_tool_usage_stats.csv"  # do not put quotes at the beginning and the end
+    generated_file_path_csv = config.file_path[
+                              :-4] + "_with_tool_usage_stats.csv"  # do not put quotes at the beginning and the end
     if flag == 0:
         if os.path.exists(generated_file_path_csv):
             prev_data_with_appened_zeros = pd.read_csv(generated_file_path_csv, sep=',')
-            cur_data_with_appened_zeros = prev_data_with_appened_zeros._append(data_with_tool_used_calc, ignore_index=True)
+            cur_data_with_appened_zeros = prev_data_with_appened_zeros._append(data_with_tool_used_calc,
+                                                                               ignore_index=True)
             cur_data_with_appened_zeros = cur_data_with_appened_zeros.reset_index(drop=True)
             data_with_tool_used_calc = cur_data_with_appened_zeros
 
@@ -148,6 +154,9 @@ def suggest_order(data):
     The continuity of 0's and 1's are monitored using 'next_of_cur_used' and 'next_of_next_of_cur_used'. The function
     returns a data frame with duration of usage of each tool along with the sequence of the tool.
     """
+    if data is None:
+        print("Data in the suggest order step is empty")
+        return pd.DataFrame()  # returning an empty data frame
 
     counter = 0
     tool_usage_duration = pd.DataFrame(columns=['StartDate', 'EndDate', 'ID', 'Duration'])
@@ -205,9 +214,9 @@ def suggest_order(data):
 
         elif cur_used == int(0) and counter > 1 and cur_tool == prev_tool and \
                 (
-                (next_of_cur_used == int(0) and next_of_next_of_cur_used != int(0)) or
-                (next_of_cur_used == int(0) and next_of_next_of_cur_used != int(0)) or
-                (next_of_cur_used != int(0) and next_of_next_of_cur_used != int(0))
+                        (next_of_cur_used == int(0) and next_of_next_of_cur_used != int(0)) or
+                        (next_of_cur_used == int(0) and next_of_next_of_cur_used != int(0)) or
+                        (next_of_cur_used != int(0) and next_of_next_of_cur_used != int(0))
                 ):
             counter += 1
 
@@ -232,7 +241,7 @@ def suggest_order(data):
     ordered_data = ordered_data.reset_index(drop=True)  # inplace=True
     # TODO: Write the code for 2 or more tools being used at the same time. suggest: tool 1 and tool 2
 
-    order_file_path = file_path[:-4] + "_tool_order.xlsx"  # do not put quotes at the beginning and the end
+    order_file_path = config.file_path[:-4] + "_tool_order.xlsx"  # do not put quotes at the beginning and the end
     order_file_path = order_file_path.replace("/", "\\")  # done to fix the path for .to_excel() to work
     ordered_data.to_excel(order_file_path)
 
@@ -267,11 +276,19 @@ def create_clean_data(data):
     returned.
     """
     if data.empty:
-        print("There is no data")
+        print("Data in the create clean data step is empty")
         return
 
-    start_date = data.loc[0, 'StartDate']
-    end_date = data.loc[len(data) - 1, 'EndDate']
+    df_start_date = data['StartDate']
+    df_end_date = data['EndDate']
+
+    min_of_start_date = min(df_start_date)
+    min_of_end_date = min(df_end_date)
+    max_of_start_date = max(df_start_date)
+    max_of_end_date = max(df_end_date)
+
+    start_date = min(min_of_start_date, min_of_end_date)
+    end_date = max(max_of_start_date, max_of_end_date)
 
     index = start_date
 
@@ -283,16 +300,15 @@ def create_clean_data(data):
         index = index + dt.timedelta(seconds=1)
 
     # Split data into different data frames for each tool
-    global tool_marker_map_dict
     data_list = []
-    for key, value in tool_marker_map_dict.items():
+    for key, value in config.tool_marker_map_dict.items():
         data_to_append = data[data['ID'] == value]
         data_to_append = data_to_append.reset_index(drop=True)
         data_list.append(data_to_append)
 
     entire_clean_time_series_data = pd.DataFrame()
 
-    for key, value in tool_marker_map_dict.items():
+    for key, value in config.tool_marker_map_dict.items():
         clean_data['ID'] = value
         entire_clean_time_series_data = entire_clean_time_series_data._append(clean_data, ignore_index=True)
 
@@ -301,24 +317,18 @@ def create_clean_data(data):
     for df in data_list:
         for index_in_df in df.index:
             tool = str(df['ID'].iloc[index_in_df])
-            print(tool)
             duration = int(df['Duration'].iloc[index_in_df])
-            print(duration)
             start_date = df['StartDate'].iloc[index_in_df]
-            print(start_date)
-            row = ectsd[(ectsd['TimeStamp'] == start_date) & (ectsd['ID'] == tool)]
-            print(row)
             try:
                 start_index_to_fill = ectsd[(ectsd['TimeStamp'] == start_date) & (ectsd['ID'] == tool)].index[0]
             except IndexError:
                 break
-            print(start_index_to_fill)
             for index_clean_data in ectsd.index:
                 ectsd.loc[start_index_to_fill + index_clean_data, 'used'] = int(1)
                 if index_clean_data > duration - 1:
                     break
 
-    clean_time_series_data_file_path = file_path[:-4] + "_filtered_clean.xlsx"
+    clean_time_series_data_file_path = config.file_path[:-4] + "_filtered_clean.xlsx"
     # done to fix the path for .to_excel() to work
     clean_time_series_data_file_path = clean_time_series_data_file_path.replace("/", "\\")
     ectsd.to_excel(clean_time_series_data_file_path, index=False)
@@ -326,40 +336,207 @@ def create_clean_data(data):
     return ectsd
 
 
-def plot_data(data):
+def plot_line_all_separate(data, flag):
+    """
+    :param data: A data frame to be plotted
+    :param flag: An integer value to differentiate between original and smoothened data
+    :return:
+
+    This function plots a graph containing subplots of tool usage of each tool. Creates an image and an HTML page for
+    interaction with the graph.
+    """
+    # fig = plt.figure(figsize=(18, 8), dpi=60)
+    fig, ax = plt.subplots(figsize=(15, 7))
+    plt.ylabel("Tool usage (1 indicates used, 0 not used")
+    plot = sns.relplot(
+        data=data, x="TimeStamp", y="used",
+        col="ID", hue="ID", style="ID",
+        kind="line", col_wrap=1, marker='o', dashes=False, height=1, aspect=10,
+    )
+    plt.yticks([0, 0.5, 1])
+    # plot.set_ylabels("Tool usage (1 indicates used, 0 not used")
+    # plot.fig.suptitle("Separated plot of usage statistics of all the each tool over time\n\n", fontname="Times New Roman",fontweight="bold")
+    # plot.fig.subplots_adjust(top=1.5)
+
+    html_str = mpld3.fig_to_html(fig)
+    if flag == 0:
+        plt.savefig('static/imgs/plot_line_all_separate.png', dpi=100)
+        html_file = open("templates/plot_line_all_separate.html", "w")
+    elif flag == 1:
+        plt.savefig('static/imgs/plot_line_all_separate_cleaned.png', dpi=100)
+        html_file = open("templates/plot_line_all_separate_cleaned.html", "w")
+
+    html_file.write(html_str)
+    html_file.close()
+
+
+def plot_line_all_combined(data, flag):
+    """
+    :param data: A data frame to be plotted
+    :param flag: An integer value to differentiate between original and smoothened data
+    :return:
+
+    This function plots a graph that combines tool usage of all the tools in one. Creates an image and an HTML page for
+    interaction with the graph.
+    """
+    fig, ax = plt.subplots(figsize=(15, 7))
+    plt.ylim(-1, 2)
+    # ax = plt.gca()  # can access ax this way too
+    x_dates = data['TimeStamp'].dt.strftime('%D-%M-%Y %h:%m:%s').sort_values().unique()
+    max_date = max(data['TimeStamp'])
+    max_date = max_date + dt.timedelta(0, 5)
+    min_date = min(data['TimeStamp'])
+    min_date = min_date - dt.timedelta(0, 5)
+    plt.xlim(min_date, max_date)
+    ax.set_xticklabels(labels=x_dates, rotation=10, ha='right')
+
+    ax.set_ylabel("Tool usage (1 indicates used, 0 not used")
+    ax.set_title('Plot of usage statistics of all the tools over time', fontname="Times New Roman", size=28,
+                 fontweight="bold")
+    line_plot_all_combined_plot = sns.pointplot(data=data, x="TimeStamp", y="used", hue="ID")
+    line_plot_all_combined_figure = line_plot_all_combined_plot.get_figure()
+
+    number_of_ticks = 0
+    for ind, label in enumerate(ax.get_xticklabels()):
+        number_of_ticks += 1
+
+    for ind, label in enumerate(ax.get_xticklabels()):
+        if ind % 5 == 0:  # every 5th label is kept
+            label.set_visible(True)
+        else:
+            label.set_visible(False)
+        if ind == (number_of_ticks - 1):
+            label.set_visible(True)
+
+    html_str = mpld3.fig_to_html(fig)
+    if flag == 0:
+        line_plot_all_combined_figure.savefig('static/imgs/plot_line_all_combined.png')
+        html_file = open("templates/plot_line_all_combined.html", "w")
+    elif flag == 1:
+        line_plot_all_combined_figure.savefig('static/imgs/plot_line_all_combined_cleaned.png')
+        html_file = open("templates/plot_line_all_combined_cleaned.html", "w")
+
+    html_file.write(html_str)
+    html_file.close()
+
+
+def plot_kde(data, flag, variant):
+    """
+    :param data: A data frame to be plotted
+    :param flag: An integer value to differentiate between original and smoothened data
+    :param variant: An integer value to differentiate between two variants
+    :return:
+
+    This function plots a density graph of the usage of all the tools. Creates an image and an HTML page for interaction
+    with the graph.
+    """
+    fig, ax = plt.subplots(figsize=(15, 7))
+    # To format the date stamps on the html render
+    # x_dates = data['TimeStamp'].dt.strftime('%d-%m-%Y %h:%m:%s').sort_values().unique()
+    # ax.set_xticklabels(labels=x_dates, rotation=10, ha='right')
+    ax.set_ylabel("Kernel density estimation of tool usage")
+    ax.set_title('Kernel density estimation (KDE) plot of tool usage', fontname="Times New Roman", size=28,
+                 fontweight="bold")
+    if variant == 1:
+        kde_plot = sns.kdeplot(data=data, x="TimeStamp", y="used", hue="ID", fill=True, common_norm=False, alpha=.5,
+                               linewidth=1)
+        kde_plot_figure = kde_plot.get_figure()
+
+        html_str = mpld3.fig_to_html(fig)
+
+        if flag == 0:
+            kde_plot_figure.savefig('static/imgs/plot_kde_variant1.png')
+            html_file = open("templates/kde_plot_variant1.html", "w")
+        elif flag == 1:
+            kde_plot_figure.savefig('static/imgs/plot_kde_cleaned_variant1.png')
+            html_file = open("templates/plot_kde_cleaned_variant1.html", "w")
+
+        html_file.write(html_str)
+        html_file.close()
+    else:
+        data = data[data['used'] == 1]
+        kde_plot = sns.kdeplot(data=data, x="TimeStamp", hue="ID", fill=True, common_norm=False, alpha=.5,
+                               linewidth=1)
+        kde_plot_figure = kde_plot.get_figure()
+
+        html_str = mpld3.fig_to_html(fig)
+
+        if flag == 0:
+            kde_plot_figure.savefig('static/imgs/plot_kde_variant2.png')
+            html_file = open("templates/plot_kde_variant2.html", "w")
+        elif flag == 1:
+            kde_plot_figure.savefig('static/imgs/plot_kde_cleaned_variant2.png')
+            html_file = open("templates/plot_kde_cleaned_variant2.html", "w")
+
+        html_file.write(html_str)
+        html_file.close()
+
+
+def plot_bokeh(data, flag, _dict):
+    """
+    :param data: A data frame to be plotted
+    :param flag: An integer value to differentiate between original and smoothened data
+    :param _dict: A dictionary containing the tool and marker mapping
+    :return:
+
+    This function plots a graph that combines tool usage of all the tools in one using the bokeh package. Creates an
+    HTML page for interaction with the graph.
+    """
+    print(type(data['TimeStamp']))
+    colors = itertools.cycle(palette)
+    print(colors, type(colors))
+    p = figure(width=1400, height=500, x_axis_type="datetime")
+    for key, value in _dict.items():
+        df = data[data['ID'] == value]
+        color_used = next(colors)
+        p.line((df['TimeStamp']), df['used'], color=color_used, line_width=2)
+        p.circle(df['TimeStamp'], df['used'], fill_color=color_used, size=10)
+        p.xaxis.formatter = DatetimeTickFormatter(years="%d/%m/%Y %H:%M:%S",
+                                                  months="%d/%m/%Y %H:%M:%S",
+                                                  days="%d/%m/%Y %H:%M:%S",
+                                                  hours="%d/%m/%Y %H:%M:%S",
+                                                  hourmin="%d/%m/%Y %H:%M:%S",
+                                                  minutes="%d/%m/%Y %H:%M:%S",
+                                                  minsec="%d/%m/%Y %H:%M:%S",
+                                                  seconds="%d/%m/%Y %H:%M:%S",
+                                                  milliseconds="%d/%m/%Y %H:%M:%S",
+                                                  microseconds="%d/%m/%Y %H:%M:%S")
+
+    if flag == 0:
+        output_file("templates/bokeh.html")
+    elif flag == 1:
+        output_file("templates/bokeh_cleaned_data.html")
+    show(p)
+
+
+def plot_data(data, flag):
     """
     :param data: A data frame containing data returned by create_clean_excel().
+    :param flag: An integer value to differentiate between original and smoothened data
     :return: plt: A plot to visualize data.
 
     This function generates different plots to visualize the data
     """
 
-    if data.empty:
+    if data is None:
         print("No data was recorded to be visualized.")
 
     else:
-        sns.set_theme(style="darkgrid")
-        sns_plot1 = sns.kdeplot(data=data, x="TimeStamp", hue="ID", fill=True, common_norm=False, alpha=.5, linewidth=0)
-        sns_plot1_figure = sns_plot1.get_figure()
-        sns_plot1_figure.savefig('static/imgs/sns_plot1.png')
-        #sns.kdeplot(data=data, x="TimeStamp", hue="ID", bw_adjust=.2)
-        plt.show()
-        plt.close()
+        # Plot 1
+        plot_kde(data, flag, 1)
+        # Plot 2
+        plot_kde(data, flag, 2)
+        # Plot 3
+        plot_line_all_combined(data, flag)
+        # Plot 4
+        plot_line_all_separate(data, flag)
 
-        # Load an example dataset with long-form data
-
-        # Plot the responses for different events and regions
-        sns.lineplot(x="TimeStamp", y="used",
-                     hue="ID",
-                     data=data)
-        plt.show()
+    return
 
 
-def main(path, map_dict):
+def main():
     print("Starting Data Processing...\n")
-    global file_path, tool_marker_map_dict, flag_for_empty_data_append_override
-    file_path = path
-    tool_marker_map_dict = map_dict
+    file_path = config.file_path
     entire_data = pd.read_csv(file_path, sep=',')
 
     # create a copy of the excel
@@ -386,15 +563,15 @@ def main(path, map_dict):
     # code used when processingAndVisualization needs to be used without appending any data
     if len(data_list_time_grouped) == 0:
         print("\nEmpty data in 'Split and Group' step i.e no new data was appended, no further steps were attempted.")
-        print("\nThe system is deigned to stop if no new data is appended to save computations. Do you wish to override"
-              " this and plot the graph of the already existing data instead?")
+        print("\nThe system is designed to stop if no new data is appended to save computations. Do you wish to "
+              "override this and plot the graph of the already existing data instead?")
         choice = input("'y' for yes | 'n' for no\n")
 
         if choice == 'y':
             entire_data = pd.read_csv(file_path, sep=',')
             entire_data['used'] = 'na'
             print("Starting Split and Group...\n")
-            flag_for_empty_data_append_override = 1
+            config.flag_for_empty_data_append_override = 1
             data_list_time_grouped = split_and_group_data(entire_data)
 
         elif choice == 'n':
@@ -405,11 +582,12 @@ def main(path, map_dict):
 
     # calculating based on co-ordinate changes if the tool is being used or not
     print("Starting tool usage estimation...\n")
-    data_with_tool_used_calc = calculate_tool_usage(data_list_time_grouped, flag_for_empty_data_append_override)
-    flag_for_empty_data_append_override = 0
+    data_with_tool_used_calc = calculate_tool_usage(data_list_time_grouped, config.flag_for_empty_data_append_override)
+    config.flag_for_empty_data_append_override = 0
 
     # Converting time stamp data to date time format for easier time calculations
-    data_with_tool_used_calc['TimeStamp'] = pd.to_datetime(data_with_tool_used_calc['TimeStamp'])
+    if data_with_tool_used_calc is not None:
+        data_with_tool_used_calc['TimeStamp'] = pd.to_datetime(data_with_tool_used_calc['TimeStamp'])
 
     # Calculations to process and data and suggest thr order of the tool usage
     print("Starting tool order calculations...\n")
@@ -422,12 +600,16 @@ def main(path, map_dict):
     print("Order of the Tool usage is: \n")
     print(suggested_order_data)
 
-    print("\n Visualizing the data...\n")
-    plot_data(data_with_tool_used_calc)
+    # print("\n Visualizing the data...\n")
+    # plot_data(data_with_tool_used_calc, 0)
+    # plot_bokeh(data_with_tool_used_calc, flag, tool_marker_map_dict)
 
     print("Plotting smoothened/cleaned data...\n")
-    plot_data(clean_ordered_data)
+    plot_data(clean_ordered_data, 1)
+    # plot_bokeh(data_with_tool_used_calc, flag, tool_marker_map_dict)
+
+    return suggested_order_data
 
 
 if __name__ == "__main__":
-    main("C:/Users/kmmit/Desktop/Aruco Project/Mithil/Mithil.csv", {"2": "Hammer", "1": "Chisel", "0": "Screwdriver"})
+    main()
