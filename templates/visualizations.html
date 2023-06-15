@@ -58,7 +58,7 @@
                                     </center>
                                  </div>
                         </div>
-                        {% if ordered_data|length > 0 %}
+                        {% if prev_data|length > 0 %} <!-- prev_data is data that is present in an already existing file-->
                             <div class="form-row" style="background-color:rgb(0, 0, 0, 0.3);padding-top:20px;padding-bottom:10px;border-radius:20px">
                                 <div class="col form-group">
                                     <center>
@@ -71,20 +71,37 @@
                                                 <th style="width:180px;text-align:center">End Time</th>
                                                 <th style="width:80px;text-align:center">Duration (seconds)</th>
                                             </tr>
-                                            {% for index, row in ordered_data.iterrows(): %}
-                                            {% set order = index %}
-                                            {% set tool = row['ID'] %}
-                                            {% set start_time = row['StartDate'] %}
-                                            {% set end_time = row['EndDate'] %}
-                                            {% set duration = row['Duration'] %}
-                                            <tr style="text-align:center">
-                                                <td>{{order}}</td>
-                                                <td>{{tool}}</td>
-                                                <td>{{start_time}}</td>
-                                                <td>{{end_time}}</td>
-                                                <td>{{duration}}</td>
-                                            </tr>
-                                            {% endfor %}
+                                            {% if ordered_df|length > 0 %} <!-- ordered_df is the newly added data, we are checking if newly added data is empty or not-->
+                                                {% for index, row in ordered_df.iterrows(): %}
+                                                    {% set order = index %}
+                                                    {% set tool = row['ID'] %}
+                                                    {% set start_time = row['StartDate'] %}
+                                                    {% set end_time = row['EndDate'] %}
+                                                    {% set duration = row['Duration'] %}
+                                                    <tr style="text-align:center">
+                                                        <td>{{order}}</td>
+                                                        <td>{{tool}}</td>
+                                                        <td>{{start_time}}</td>
+                                                        <td>{{end_time}}</td>
+                                                        <td>{{duration}}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            {% else %}
+                                                {% for index, row in prev_data.iterrows(): %}
+                                                    {% set order = index %}
+                                                    {% set tool = row['ID'] %}
+                                                    {% set start_time = row['StartDate'] %}
+                                                    {% set end_time = row['EndDate'] %}
+                                                    {% set duration = row['Duration'] %}
+                                                    <tr style="text-align:center">
+                                                        <td>{{order}}</td>
+                                                        <td>{{tool}}</td>
+                                                        <td>{{start_time}}</td>
+                                                        <td>{{end_time}}</td>
+                                                        <td>{{duration}}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            {% endif %}
                                         </table>
                                     </center>
                                 </div>

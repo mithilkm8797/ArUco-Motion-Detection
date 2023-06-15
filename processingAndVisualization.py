@@ -520,6 +520,7 @@ def plot_data(data, flag):
 
     if data is None:
         print("No data was recorded to be visualized.")
+        return
 
     else:
         # Plot 1
@@ -530,8 +531,6 @@ def plot_data(data, flag):
         plot_line_all_combined(data, flag)
         # Plot 4
         plot_line_all_separate(data, flag)
-
-    return
 
 
 def main():
@@ -608,7 +607,12 @@ def main():
     plot_data(clean_ordered_data, 1)
     # plot_bokeh(data_with_tool_used_calc, flag, tool_marker_map_dict)
 
-    return suggested_order_data
+    # This is done in order to display previous tool order and visualizations (in the visualizations.html page)in case
+    # the newly added data (in append mode) is empty.
+    tool_order_path = file_path[:-4] + "_tool_order.xlsx"
+    prev_suggested_order_data = pd.read_excel(tool_order_path)
+
+    return suggested_order_data, prev_suggested_order_data
 
 
 if __name__ == "__main__":
