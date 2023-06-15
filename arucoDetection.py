@@ -11,15 +11,6 @@ from cv2 import aruco
 import processingAndVisualization as PV
 import config as config
 
-#default_folder = "C:/Users/kmmit/Desktop/Aruco Project/"
-#folder = ""
-#filename = "Data"
-#file_path = "C:/Users/kmmit/Desktop/Aruco Project/Data/Data.csv"
-
-#tool_list = ["Hammer", "Chisel", "Screwdriver"]
-#marker_list = ["2", "1", "0"]
-#tool_marker_map_dict = {"2": "Hammer", "1": "Chisel", "0": "Screwdriver"}
-
 ARUCO_DICT = {
     "DICT_4X4_50": cv2.aruco.DICT_4X4_50,
     "DICT_4X4_100": cv2.aruco.DICT_4X4_100,
