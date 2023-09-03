@@ -71,7 +71,7 @@ def detection():
 
 
 @views.route("/visualizations")
-def visualization():
+def visualizations():
     ordered_df, prev_ordered_df = PV.main()
     print(type(ordered_df))
     return render_template("visualizations.html", file_exists=config.file_exists, filename=config.file_name,
