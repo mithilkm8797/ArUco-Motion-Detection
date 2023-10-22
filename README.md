@@ -10,7 +10,7 @@ This master thesis project aims to support DIY authors in their documentation pr
 1. Download/Clone the project from the [github repository][3].
 2. Download and install the list of packages from the `packages_all.jpeg`. ([File](static/imgs/packages_all.jpeg))
       * Please make sure to use the `python` version `3.x` and `opencv-contrib-python` version `3.4.11.45` to avoid compile time errors and versioning conflicts.
-3. Print the desired Aruco marker types and sizes from [here][4].
+3. Print the desired ArUco marker types and sizes from [here][4].
       * Each tool must have a unique marker affixed to it, for the tools to be differentiated from each other.
       * An example can be seen in the image below.<br>
         ![][image-1]
