@@ -8,7 +8,7 @@ This master thesis project aims to support DIY authors in their documentation pr
 ## Building the Project
 
 1. Download/clone the project from the [github repository][3].
-2. Download and install the list of packages from the `packages_all.jpeg` ([File][static/imgs/packages_all.jpeg])
+2. Download and install the list of packages from the `packages_all.jpeg` ([File](static/imgs/packages_all.jpeg))
 3. Print the desired Aruco marker types and sizes from [here][4]. Each tool must have a unique marker affixed to it, for the tools to be differentiated from each other.
 
 [1]: https://en.wikipedia.org/wiki/Do_it_yourself
