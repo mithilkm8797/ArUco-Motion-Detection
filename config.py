@@ -1,5 +1,5 @@
 """
-# This file is used a global initializer/configuration file for all other files.
+# This file is used as a global initializer/configuration file for all other files.
 
 # Default values used for testing
 # ---------------------------------
