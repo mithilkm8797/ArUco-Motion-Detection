@@ -13,7 +13,8 @@ from bokeh.palettes import Dark2_5 as palette
 from bokeh.plotting import figure, show, output_file
 
 import config as config
-
+import ctypes
+import easygui
 
 def split_and_group_data(entire_data):
     """
@@ -30,9 +31,11 @@ def split_and_group_data(entire_data):
 
     # splitting data into data frames for each tool
     data_list = []
+
     for key, value in config.tool_marker_map_dict.items():
         data_list.append(entire_data[entire_data['ID'] == value])
 
+    print("print1\n", data_list)
     # remove empty data frames for cases when a certain tool is not used
     # for each df in data_list if its is not empty then add it to data_list (syntax is called list comprehension)
     data_list = [df for df in data_list if not df.empty]
@@ -239,7 +242,6 @@ def suggest_order(data):
         print("The tools were not used for long enough to generate an order")
     ordered_data = tool_usage_duration_filtered.sort_values(by=['StartDate'])
     ordered_data = ordered_data.reset_index(drop=True)  # inplace=True
-    # TODO: Write the code for 2 or more tools being used at the same time. suggest: tool 1 and tool 2
 
     order_file_path = config.file_path[:-4] + "_tool_order.xlsx"  # do not put quotes at the beginning and the end
     order_file_path = order_file_path.replace("/", "\\")  # done to fix the path for .to_excel() to work
@@ -355,7 +357,8 @@ def plot_line_all_separate(data, flag):
     )
     plt.yticks([0, 0.5, 1])
     # plot.set_ylabels("Tool usage (1 indicates used, 0 not used")
-    # plot.fig.suptitle("Separated plot of usage statistics of all the each tool over time\n\n", fontname="Times New Roman",fontweight="bold")
+    # plot.fig.suptitle("Separated plot of usage statistics of all the each tool over time\n\n", fontname="Times
+    # New Roman",fontweight="bold")
     # plot.fig.subplots_adjust(top=1.5)
 
     html_str = mpld3.fig_to_html(fig)
@@ -561,12 +564,18 @@ def main():
 
     # code used when processingAndVisualization needs to be used without appending any data
     if len(data_list_time_grouped) == 0:
+        easygui.msgbox(
+            "\n\n\nEmpty data was sent to the 'Split and Group' step,\n\n No new data was "
+            "appended, hence no further steps were attempted.\n\nPlease use the console of your IDE to proceed further.",
+            title="The data sent to split and group step was empty")
+
         print("\nEmpty data in 'Split and Group' step i.e no new data was appended, no further steps were attempted.")
         print("\nThe system is designed to stop if no new data is appended to save computations. Do you wish to "
-              "override this and plot the graph of the already existing data instead?")
+              "override this and plot the graph of the already existing data from the previous run instead?")
         choice = input("'y' for yes | 'n' for no\n")
 
         if choice == 'y':
+            print(file_path)
             entire_data = pd.read_csv(file_path, sep=',')
             entire_data['used'] = 'na'
             print("Starting Split and Group...\n")
@@ -579,6 +588,7 @@ def main():
             print("Unexpected input, exiting.")
             return
 
+    #print("print\n", data_list_time_grouped)
     # calculating based on co-ordinate changes if the tool is being used or not
     print("Starting tool usage estimation...\n")
     data_with_tool_used_calc = calculate_tool_usage(data_list_time_grouped, config.flag_for_empty_data_append_override)
@@ -610,9 +620,18 @@ def main():
     # This is done in order to display previous tool order and visualizations (in the visualizations.html page)in case
     # the newly added data (in append mode) is empty.
     tool_order_path = file_path[:-4] + "_tool_order.xlsx"
-    prev_suggested_order_data = pd.read_excel(tool_order_path)
+    try:
+        prev_suggested_order_data = pd.read_excel(tool_order_path)
+        easygui.msgbox(
+            "\n\n\nHold on!\nThis might take a while.\nThe visualizations are being generated in the background.",
+            title="Hold on!")
+        return suggested_order_data, prev_suggested_order_data
 
-    return suggested_order_data, prev_suggested_order_data
+    except FileNotFoundError:
+        print("File containing previous data not found, to be plotted")
+        #ctypes.windll.user32.MessageBoxW(0, "Your text", "Your title", 1)
+        easygui.msgbox("\n\n\n\nNo files containing previous data were found to be plotted.\n\nPlease return to the home page or restart the application to start over again.", title="File not found")
+
 
 
 if __name__ == "__main__":

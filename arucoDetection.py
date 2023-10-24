@@ -6,10 +6,12 @@ import os
 import numpy as np
 import shutil
 
+import pandas as pd
 from cv2 import aruco
 
 import processingAndVisualization as PV
 import config as config
+import tool_marker_handling as TMH
 
 ARUCO_DICT = {
     "DICT_4X4_50": cv2.aruco.DICT_4X4_50,
@@ -212,6 +214,9 @@ def file_handling(choice):
         with open(file_path, "a", encoding="UTF8", newline='') as csv_file:
             writer = csv.DictWriter(csv_file, fieldnames=headers)
             writer.writeheader()
+
+        TMH.handling()
+
     elif choice == "d":
         try:
             shutil.rmtree(folder, ignore_errors=True)
@@ -225,8 +230,12 @@ def file_handling(choice):
             writer = csv.DictWriter(csv_file, fieldnames=headers)
             writer.writeheader()
         print("The file " + "\'" + filename + ".csv\' with path: " + "\"" + file_path + "\"" + " was created.")
+
+        TMH.handling()
+
     elif choice == "a":
-        print("Appending data to " + "\'" + filename + ".csv\' with path: " + "\"" + file_path + "\"" )
+        print("Appending data to " + "\'" + filename + ".csv\' with path: " + "\"" + file_path + "\"")
+        TMH.handling()
     else:
         print("Did not receive the right choice!")
 
