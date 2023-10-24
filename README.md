@@ -17,7 +17,7 @@ This master thesis project aims to support DIY authors in their documentation pr
 4. Install the `iVCam` application both on the computer used to run the application and on the smartphone device whose camera will be used for detection.
       * This application is required to access the smartphone camera directly from the computer during the application run.
       * `iVCam` can be downloaded from [here][5].
-5. Also make sure to set the right folder locations, where you would like the application to save the files generated during the applicaiton run in `config.py` 
+5. Make sure to set the right folder locations, where you would like the application to save the files generated during the applicaiton run in `config.py` 
 6. Run the application by running the `app.py` file.
    
 [1]: https://en.wikipedia.org/wiki/Do_it_yourself
