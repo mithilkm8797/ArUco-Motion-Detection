@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="ArUco Motion Detection Thesis">
+    <meta name="author" content="Mithil Kashipurad">
+    <title>ArUco Motion Detection Thesis</title>
+
+    <!-- font icons -->
+    <link rel="stylesheet" href="/static/vendors/themify-icons/css/themify-icons.css">
+
+    <!-- favicon -->
+    <link rel="icon" href="/static/imgs/aruco_logo.png">
+
+    <!-- owl carousel -->
+    <link rel="stylesheet" href="/static/vendors/owl-carousel/css/owl.carousel.css">
+    <link rel="stylesheet" href="/static/vendors/owl-carousel/css/owl.theme.default.css">
+
+    <!-- Bootstrap + CSS main styles -->
+	<link rel="stylesheet" href="/static/css/css_file.css">
+
+</head>
+<body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
+
+    <nav id="scrollspy" class="navbar navbar-dark bg-dark navbar-expand-lg fixed-top" data-spy="affix" data-offset-top="20">
+        <div class="container">
+            <a class="navbar-brand" href="#"><img src="/static/imgs/aruco_logo.png" alt="" class="brand-img"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <h4 class="subtitle font-weight-normal" style="color:aliceblue">ArUco Motion Detection</h4>
+        </div>
+    </nav>
+
+
+    <header id="home_header" class="header">
+
+        <div class="overlay"></div>
+        <div id="header-carousel" class="carousel slide carousel-fade" data-ride="carousel">
+            <div class="container">
+                <div class="carousel-caption d-none d-md-block">
+                    <form class="contact-form" method="POST" id="form">
+                        <div class="form-row">
+                            <div class="col form-group">
+                                 <center>
+                                     <h2 class="subtitle font-weight-normal" style="color:rgb(64,127,183);"><b>Detection Info</b></h2>
+                                </center>
+                             </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <center>
+                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"><br></h6>
+                                </center>
+                            </div>
+                        </div>
+                        <div style="background-color:rgb(0, 0, 0, 0.3);padding-top:20px;padding-bottom:20px;">
+                            <div class="form-row">
+                                <div class="col form-group">
+                                    <center>
+                                        <h6 class="subtitle font-weight-normal" style="color:aliceblue"></h6>
+                                    </center>
+                                </div>
+                             </div>
+                            <div class="form-row">
+                                <div class="col form-group">
+                                     <center>
+                                        <div>
+                                            <p style="color: white">This is the information page of the 'Detection Page'.<br><br>
+                                                This is also the <i>'Detection Phase'</i>.<br>
+                                            </p>
+                                        </div>
+                                    </center>
+                                 </div>
+                            </div>
+                        </div>
+                        <div style="background-color:rgb(0, 0, 0, 0.3);padding-top:20px;margin-top:20px;">
+                            <div class="form-row">
+                                <div class="col form-group">
+                                    <center>
+                                    <p style="color: aliceblue; margin: 40px; background-color:red">
+                                        <b>NOTE:</b> <br><br>
+                                               For the cases where no data was added (no detections were made), please go
+                                               to the console of your IDE (the application you used to run the application)
+                                               and proceed with the further instructions from there.
+                                    </p></center>
+                                        <ul style="color: aliceblue; margin: 40px">
+                                            <li>The application starts off by informing the user about the minimum
+                                                requirement/constraint of the prototype, about the markers attached to
+                                                the tool being visible to the camera at all times when the tool is at rest,
+                                                throughout the DIY process (see image below). <br><br>The user must click on the
+                                                'Understood' button to proceed.
+                                                <br><br>
+                                                <img style="height:12cm;width:26cm;display:block; margin-left: auto;
+                                                margin-right: auto;" src="static/imgs/constraint_info.png">
+                                            </li>
+                                            <br>
+                                            <li>The user can then click on the ‘Start Video Stream’ button to initiate
+                                                the capturing process/start the video stream for detection (see image below).
+                                                <br><br>
+                                                <img style="height:12cm;width:26cm;display:block; margin-left: auto;
+                                                margin-right: auto;" src="static/imgs/start_video_stream.png">
+                                            </li>
+                                            <br>
+                                           <li>A pop-up informing the user necessitating the clicking of the 'x' icon of
+                                               the video stream window to end the capturing process appears. The popup
+                                               also informs that the user now has to move to the tool usage area to start
+                                               using the tools (see image below). <br><br>The user must click on the
+                                               'Understood' button to proceed. Note that the window can also be closed
+                                               by right-clicking on the detection window and choosing to close it.
+                                                <br><br>
+                                                <img style="height:12cm;width:26cm;display:block; margin-left: auto;
+                                                margin-right: auto;" src="static/imgs/close_window_popup.jpg">
+                                            </li>
+                                            <br>
+                                           <li>The detection/capturing window shows the tools being detected (see image below).
+                                                <br><br>
+                                                <img style="height:14cm;width:26cm;display:block; margin-left: auto;
+                                                margin-right: auto;" src="static/imgs/detection_window.jpg">
+                                            </li>
+                                            <br>
+                                           <li>The console (of the IDE which is being used to run the web application)
+                                               shows the detection information such as the detected tool,
+                                               it's ID, and it's X and Y co-ordinates (see image below):
+                                                <br><br>
+                                                <img style="height:7cm;width:26cm;display:block; margin-left: auto;
+                                                margin-right: auto;" src="static/imgs/console.png">
+                                            </li>
+                                             <br>
+                                           <li>The user must then close the capturing window by clicking on the 'X' button.
+                                               This ends the detection process.
+                                               <br><br>The user must click on the 'To Visualizations > ' button to proceed to the
+                                               <i>'Visualization Phase'</i>.
+                                            </li>
+                                        </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <center>
+                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"><br></h6>
+                                </center>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <center>
+                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"><br></h6>
+                                </center>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+	<!-- core  -->
+    <script src="/static/vendors/jquery/jquery-3.4.1.js"></script>
+    <script src="/static/vendors/bootstrap/bootstrap.bundle.js"></script>
+
+    <!-- bootstrap 3 affix -->
+	<script src="/static/vendors/bootstrap/bootstrap.affix.js"></script>
+
+    <!-- Owl carousel  -->
+    <script src="/static/vendors/owl-carousel/js/owl.carousel.js"></script>
+
+    <!-- Script js -->
+    <script src="/static/js/scripts.js"></script>
+
+    <script src="/static/js/disable_browser_back_button.js"></script>
+
+    <script type="text/javascript">
+
+    </script>
+
+</body>
+</html>

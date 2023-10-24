@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="ArUco Motion Detection Thesis">
+    <meta name="author" content="Mithil Kashipurad">
+    <title>ArUco Motion Detection Thesis</title>
+
+    <!-- font icons -->
+    <link rel="stylesheet" href="/static/vendors/themify-icons/css/themify-icons.css">
+
+    <!-- favicon -->
+    <link rel="icon" href="/static/imgs/aruco_logo.png">
+
+    <!-- owl carousel -->
+    <link rel="stylesheet" href="/static/vendors/owl-carousel/css/owl.carousel.css">
+    <link rel="stylesheet" href="/static/vendors/owl-carousel/css/owl.theme.default.css">
+
+    <!-- Bootstrap + CSS main styles -->
+	<link rel="stylesheet" href="/static/css/css_file.css">
+
+</head>
+<body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
+
+    <nav id="scrollspy" class="navbar navbar-dark bg-dark navbar-expand-lg fixed-top" data-spy="affix" data-offset-top="20">
+        <div class="container">
+            <a class="navbar-brand" href="#"><img src="/static/imgs/aruco_logo.png" alt="" class="brand-img"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <h4 class="subtitle font-weight-normal" style="color:aliceblue">ArUco Motion Detection</h4>
+        </div>
+    </nav>
+
+
+    <header id="home_header" class="header">
+
+        <div class="overlay"></div>
+        <div id="header-carousel" class="carousel slide carousel-fade" data-ride="carousel">
+            <div class="container">
+                <div class="carousel-caption d-none d-md-block">
+                    <form class="contact-form" method="POST" id="form">
+                        <div class="form-row">
+                            <div class="col form-group">
+                                 <center>
+                                     <h2 class="subtitle font-weight-normal" style="color:rgb(64,127,183);"><b>Visualization Info</b></h2>
+                                </center>
+                             </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <center>
+                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"><br></h6>
+                                </center>
+                            </div>
+                        </div>
+                        <div style="background-color:rgb(0, 0, 0, 0.3);padding-top:20px;padding-bottom:20px;">
+                            <div class="form-row">
+                                <div class="col form-group">
+                                    <center>
+                                        <h6 class="subtitle font-weight-normal" style="color:aliceblue"></h6>
+                                    </center>
+                                </div>
+                             </div>
+                            <div class="form-row">
+                                <div class="col form-group">
+                                     <center>
+                                        <div>
+                                            <p style="color: white">This is the information page of the 'Visualization Page'.<br><br>
+                                                This is also the <i>'Visualization Phase'</i>.<br>
+                                            </p>
+                                        </div>
+                                    </center>
+                                 </div>
+                            </div>
+                        </div>
+                        <div style="background-color:rgb(0, 0, 0, 0.3);padding-top:20px;margin-top:20px;">
+                            <div class="form-row">
+                                <div class="col form-group">
+                                        <ul style="color: aliceblue; margin: 40px">
+                                            <li>In this phase, we visualize the time series data and plot the
+                                                tool usage graphs for the entire timeline of the DIY process.
+                                                We also display the tool usage order along with the
+                                                duration statistics. <br><br>
+                                                The three different graphs are:
+                                                <ol>
+                                                    <li>The combined tool usage plot of all the tools</li>
+                                                    <li>The separated tool usage plots of each tool.</li>
+                                                    <li>The KDE plot of all the tools - <i>A kernel density estimate (KDE)
+                                                        plot is a method for visualizing the distribution of
+                                                        observations in a dataset, analogous to a histogram.
+                                                        KDE represents the data using a continuous probability density
+                                                        curve in one or more dimensions.</i> </li>
+                                                </ol>
+                                                <br><br>
+
+                                                In the following images below we can see the tool usage statistics
+                                                followed by the three graphs one after the other in order.
+                                                <br><br>
+                                                <b>Tool usage Statistics:</b> <i>Shows a table summarizing the order in
+                                                    which the tools were used, the start and end usage time of each tool,
+                                                    and the duration of usage in seconds.</i>
+                                                <br><br>
+                                                <img style="height:9cm;width:26cm;display:block; margin-left: auto;
+                                                margin-right: auto;" src="static/imgs/tool_usage_statistics.png">
+                                                <br><br>
+                                                 <b>Combined Plot: </b> <i>A plot where the tool usage visualization of all the
+                                                tools are combined in one single graph. 0.0 on the Y-axis indicates the tool
+                                                being at rest, while 1.0 indicates the tool being used. 0.5 does not mean
+                                                anything.</i>
+                                                <br><br>
+                                                <img style="height:12cm;width:26cm;display:block; margin-left: auto;
+                                                margin-right: auto;" src="static/imgs/combined_graph.png">
+                                                <br><br>
+                                                 <b>Separated plot: </b> <i>A plot where the tool usage visualization of each
+                                                tool is plotted separately and stacked on top on each other. 0.0 on the Y-axis indicates the tool
+                                                being at rest, while 1.0 indicates the tool being used. 0.5 does not mean
+                                                anything.</i>
+                                                <br><br>
+                                                <img style="height:12cm;width:26cm;display:block; margin-left: auto;
+                                                margin-right: auto;" src="static/imgs/separated_graph.png">
+                                                <br><br>
+                                                 <b>KDE Plot: </b> <i>This plot shows the density of the tool usage of each tool.
+                                                The peak indicates that the corresponding tool was used for the maximum
+                                                time during the entire timeline of the DIY process.</i>
+                                                <br><br>
+                                                <img style="height:12cm;width:26cm;display:block; margin-left: auto;
+                                                margin-right: auto;" src="static/imgs/KDE_plot.png">
+                                            </li>
+                                            <br>
+                                            <li>There is also an interactive graph option for each graph, on clicking
+                                                of which the user is taken to a new webpage where
+
+                                                <br><br>
+                                                <img style="height:12cm;width:26cm;display:block; margin-left: auto;
+                                                margin-right: auto;" src="static/imgs/interactive_graph.png">
+                                            </li>
+                                            <br>
+                                            <li>Clicking on the ‘home’ button located at the top right, allows the user
+                                                to exit the <i>‘Visualization Phase’</i>. On clicking the ’Yes ✔ ’ button the user
+                                                goes back to the ‘home’ page (<i>'Setup Phase'</i>) to start the next run/iteration.
+                                                On clicking the ’No x ’ button the user stays on the same page (visualization page).
+
+                                                <br><br>
+                                                <img style="height:12cm;width:26cm;display:block; margin-left: auto;
+                                                margin-right: auto;" src="static/imgs/exit_or_not.png">
+                                            </li>
+                                        </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <center>
+                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"><br></h6>
+                                </center>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <center>
+                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"><br></h6>
+                                </center>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+	<!-- core  -->
+    <script src="/static/vendors/jquery/jquery-3.4.1.js"></script>
+    <script src="/static/vendors/bootstrap/bootstrap.bundle.js"></script>
+
+    <!-- bootstrap 3 affix -->
+	<script src="/static/vendors/bootstrap/bootstrap.affix.js"></script>
+
+    <!-- Owl carousel  -->
+    <script src="/static/vendors/owl-carousel/js/owl.carousel.js"></script>
+
+    <!-- Script js -->
+    <script src="/static/js/scripts.js"></script>
+
+    <script src="/static/js/disable_browser_back_button.js"></script>
+
+    <script type="text/javascript">
+
+    </script>
+
+</body>
+</html>

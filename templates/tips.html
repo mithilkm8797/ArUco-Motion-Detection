@@ -1,25 +1,204 @@
 <!DOCTYPE html>
-<html>
-<body>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="ArUco Motion Detection Thesis">
+    <meta name="author" content="Mithil Kashipurad">
+    <title>ArUco Motion Detection Thesis</title>
 
-<h1>My First Heading</h1>
-<p>My first paragraph.</p>
-<input id="filename" type="text" placeholder="Example: Data">
-<input id="tools" type="text" placeholder="Example: Hammer, Chisel, Pliers ">
-<button id="back" type="button" onclick="location.href = '/'">back</button>
-<p id="output"> File Check is {{ file_exists }}</p>
+    <!-- font icons -->
+    <link rel="stylesheet" href="/static/vendors/themify-icons/css/themify-icons.css">
 
-<!-- core  -->
-<script src="assets/vendors/jquery/jquery-3.4.1.js"></script>
+    <!-- favicon -->
+    <link rel="icon" href="/static/imgs/aruco_logo.png">
 
-<!-- bootstrap 3 affix -->
-<script src="assets/vendors/bootstrap/bootstrap.affix.js"></script>
+    <!-- owl carousel -->
+    <link rel="stylesheet" href="/static/vendors/owl-carousel/css/owl.carousel.css">
+    <link rel="stylesheet" href="/static/vendors/owl-carousel/css/owl.theme.default.css">
 
-<!-- Owl carousel  -->
-<script src="assets/vendors/owl-carousel/js/owl.carousel.js"></script>
+    <!-- Bootstrap + CSS main styles -->
+	<link rel="stylesheet" href="/static/css/css_file.css">
 
-<script type="text/javascript">
+</head>
+<body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
 
-</script>
+    <nav id="scrollspy" class="navbar navbar-dark bg-dark navbar-expand-lg fixed-top" data-spy="affix" data-offset-top="20">
+        <div class="container">
+            <a class="navbar-brand" href="#"><img src="/static/imgs/aruco_logo.png" alt="" class="brand-img"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <h4 class="subtitle font-weight-normal" style="color:aliceblue">ArUco Motion Detection</h4>
+        </div>
+    </nav>
+
+
+    <header id="home_header" class="header">
+
+        <div class="overlay"></div>
+        <div id="header-carousel" class="carousel slide carousel-fade" data-ride="carousel">
+            <div class="container">
+                <div class="carousel-caption d-none d-md-block">
+                    <form class="contact-form" method="POST" id="form">
+                        <div class="form-row">
+                            <div class="col form-group">
+                                 <center>
+                                     <h2 class="subtitle font-weight-normal" style="color:rgb(64,127,183);"><b>Tool Tagging Tips</b></h2>
+                                </center>
+                             </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <center>
+                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"><br></h6>
+                                </center>
+                            </div>
+                        </div>
+                        <div style="background-color:rgb(0, 0, 0, 0.3);padding-top:20px;padding-bottom:20px;">
+                            <div class="form-row">
+                                <div class="col form-group">
+                                    <center>
+                                        <h6 class="subtitle font-weight-normal" style="color:aliceblue"></h6>
+                                    </center>
+                                </div>
+                             </div>
+                            <div class="form-row">
+                                <div class="col form-group">
+                                     <center>
+                                        <div>
+                                            <p style="color: white">This page gives some tips (the dos and the don'ts) on how to affix
+                                                markers onto the tools.
+                                            </p>
+                                        </div>
+                                    </center>
+                                 </div>
+                            </div>
+                        </div>
+                        <div style="background-color:rgb(0, 0, 0, 0.3);padding-top:20px;margin-top:20px;">
+                            <div class="form-row">
+                                <div class="col form-group">
+                                        <ul style="color: aliceblue; margin: 40px">
+                                            <li>We see in the image below that in (a), two same markers are used. One
+                                                is affixed to the handle of the tool and is hence curved, while the
+                                                other marker lays flat on the ground. (b) shows that the curved marker
+                                                isn't being detected. Hence, curved markers are not a good idea for accurate
+                                                detections.
+                                                <br><br>
+                                                <img style="height:6cm;width:18cm;display:block; margin-left: auto;
+                                                margin-right: auto;" src="static/imgs/curved_marker_fail_detect.png">
+                                            </li>
+                                            <br>
+                                            <li>The image below shows two hammers with different marker positions. The
+                                                hammer on the right has a better marker position as it does not cause
+                                                any hindrance to its natural usage. The marker placement on the left hammer,
+                                                might cause hindrance in its natural way of usage in some cases.
+                                                <br><br>
+                                                <img style="height:8cm;width:8cm;display:block; margin-left: auto;
+                                                margin-right: auto;" src="static/imgs/hammer_p1_vs_p2.png">
+                                            </li>
+                                            <br>
+                                           <li>In the figure below, (a) shows that the measuring tape's markers isn't
+                                               visible to the camera when it is at rest. This will cause the marker to go
+                                               undetected and hence return erroneous usage times. Similarly, in (b) the
+                                               tools are cluttered and are placed on top of each other. This
+                                               causes one or more markers going undetected. This will again result in wrong
+                                               tool usage statistics. (c) shows the right way of placing tools at rest. All the
+                                               markers are clearly visible to the camera at all times in the resting position.
+                                                <br><br>
+                                                <img style="height:8cm;width:26cm;display:block; margin-left: auto;
+                                                margin-right: auto;" src="static/imgs/how_to_place_tools.png">
+                                            </li>
+                                            <br>
+                                           <li>Using the right size of the marker is also important. In the image below, in (a),
+                                               we two markers being used. The left marker affixed onto the plier is very small and
+                                               hence goes undetected as can be seen in (b). While the marker affixed to
+                                               the hammer is of good size and is hence detected.
+                                                <br><br>
+                                                <img style="height:8cm;width:20cm;display:block; margin-left: auto;
+                                                margin-right: auto;" src="static/imgs/large_small.png">
+                                            </li>
+                                            <br>
+                                           <li>Avoid using low resolution markers or cameras. It can be seen from the image below in (a),
+                                               that the marker goes undetected because of the blurriness induced due to low
+                                               resolutions, while it is not the case in (b).
+                                                <br><br>
+                                                <img style="height:7cm;width:18cm;display:block; margin-left: auto;
+                                                margin-right: auto;" src="static/imgs/low_res_comp.png">
+                                            </li>
+                                             <br>
+                                           <li> Avoid sticking the markers in the areas where the tools are held. There are three
+                                                problems with this: <br><br>
+                                               <ul>
+                                                   <li>First, there is the case of the marker
+                                                    being obscured from the camera when its held, leading to
+                                                    a failed detection.</li>
+                                                   <li>Second, this might damage the marker
+                                                    and hence might result in the marker being undetected.</li>
+                                                   <li>Lastly, if the user tries to make sure the marker isn’t damaged he/she is
+                                                    likely to consciously focus on doing this. This
+                                                    changes the way the user is using the tool.
+                                                    The user’s attention and focus are now diverted away from
+                                                    the DIY task towards making sure the marker isn’t damaged.
+                                                    This is a form of hindrance and breaks away from the natural way of
+                                                    doing a tool-based task. This defeats the aim of our solution to preserve
+                                                    the natural way of tool usage.</li>
+                                               </ul>
+
+                                               <br><br>
+                                               <img style="height:10cm;width:14cm;display:block; margin-left: auto;
+                                                margin-right: auto;" src="static/imgs/marker_covered_by_hand.png">
+                                            </li>
+                                            <br>
+                                           <li> The location of the placement of the marker on this scissor is very poor
+                                               and not a good choice as the marker will almost always cause hindrances in the
+                                               natural way of using the scissors, which isn't desired.
+                                               <img style="height:10cm;width:6cm;display:block; margin-left: auto;
+                                                margin-right: auto;" src="static/imgs/scissors.png">
+                                            </li>
+                                        </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <center>
+                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"><br></h6>
+                                </center>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <center>
+                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"><br></h6>
+                                </center>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+	<!-- core  -->
+    <script src="/static/vendors/jquery/jquery-3.4.1.js"></script>
+    <script src="/static/vendors/bootstrap/bootstrap.bundle.js"></script>
+
+    <!-- bootstrap 3 affix -->
+	<script src="/static/vendors/bootstrap/bootstrap.affix.js"></script>
+
+    <!-- Owl carousel  -->
+    <script src="/static/vendors/owl-carousel/js/owl.carousel.js"></script>
+
+    <!-- Script js -->
+    <script src="/static/js/scripts.js"></script>
+
+    <script src="/static/js/disable_browser_back_button.js"></script>
+
+    <script type="text/javascript">
+
+    </script>
+
 </body>
 </html>

@@ -88,14 +88,29 @@ def append_delete():
     return jsonify(data)
 
 
+@views.route("/home_page_info")
+def home_page_info():
+    return render_template("home_page_info.html")
+
+
+@views.route("/file_creation_info")
+def file_creation_info():
+    return render_template("file_creation_info.html")
+
+
+@views.route("/detection_info")
+def detection_info():
+    return render_template("detection_info.html")
+
+
 @views.route("/tips")
 def tips():
     return render_template("tips.html")
 
 
-@views.route("/about")
-def about():
-    return render_template("about.html")
+@views.route("/visualization_info")
+def visualization_info():
+    return render_template("visualization_info.html")
 
 
 @views.route("/combined_plot")

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="ArUco Motion Detection Thesis">
+    <meta name="author" content="Mithil Kashipurad">
+    <title>ArUco Motion Detection Thesis</title>
+
+    <!-- font icons -->
+    <link rel="stylesheet" href="/static/vendors/themify-icons/css/themify-icons.css">
+
+    <!-- favicon -->
+    <link rel="icon" href="/static/imgs/aruco_logo.png">
+
+    <!-- owl carousel -->
+    <link rel="stylesheet" href="/static/vendors/owl-carousel/css/owl.carousel.css">
+    <link rel="stylesheet" href="/static/vendors/owl-carousel/css/owl.theme.default.css">
+
+    <!-- Bootstrap + CSS main styles -->
+	<link rel="stylesheet" href="/static/css/css_file.css">
+
+</head>
+<body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
+
+    <nav id="scrollspy" class="navbar navbar-dark bg-dark navbar-expand-lg fixed-top" data-spy="affix" data-offset-top="20">
+        <div class="container">
+            <a class="navbar-brand" href="#"><img src="/static/imgs/aruco_logo.png" alt="" class="brand-img"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <h4 class="subtitle font-weight-normal" style="color:aliceblue">ArUco Motion Detection</h4>
+        </div>
+    </nav>
+
+
+    <header id="home_header" class="header">
+
+        <div class="overlay"></div>
+        <div id="header-carousel" class="carousel slide carousel-fade" data-ride="carousel">
+            <div class="container">
+                <div class="carousel-caption d-none d-md-block">
+                    <form class="contact-form" method="POST" id="form">
+                        <div class="form-row">
+                            <div class="col form-group">
+                                 <center>
+                                     <h2 class="subtitle font-weight-normal" style="color:rgb(64,127,183);"><b>File Creation Info</b></h2>
+                                </center>
+                             </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <center>
+                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"><br></h6>
+                                </center>
+                            </div>
+                        </div>
+                        <div style="background-color:rgb(0, 0, 0, 0.3);padding-top:20px;padding-bottom:20px;">
+                            <div class="form-row">
+                                <div class="col form-group">
+                                    <center>
+                                        <h6 class="subtitle font-weight-normal" style="color:aliceblue"></h6>
+                                    </center>
+                                </div>
+                             </div>
+                            <div class="form-row">
+                                <div class="col form-group">
+                                     <center>
+                                        <div>
+                                            <p style="color: white">This is the information page of the 'File Creation Page'.<br><br>
+                                                There are two phases in this page.<br>
+                                                The <i>'File Creation Phase'</i> and the <i>'Preparation Phase'</i>.<br>
+                                            </p>
+                                        </div>
+                                    </center>
+                                 </div>
+                            </div>
+                        </div>
+                        <div style="background-color:rgb(0, 0, 0, 0.3);padding-top:20px;margin-top:20px;">
+                            <div class="form-row">
+                                <div class="col form-group">
+                                     <p style="color: aliceblue; margin: 40px"> <b>File Creation Phase:</b><br>
+                                         <i>We deal with the file creation aspects in this phase. </i></p>
+                                        <ul style="color: aliceblue; margin: 40px">
+                                            <li>If the file does not exist, a new file will be created (see image below).<br>
+                                                The user can click on the 'Next >' button to proceed to the <i>'Preparation Phase'</i>.
+                                                <br><br>
+                                                <img style="height:12cm;width:26cm;display:block; margin-left: auto;
+                                                margin-right: auto;" src="static/imgs/file_creation_file_not_exist.png">
+                                            </li>
+                                            <br>
+                                            <li>If the file already exists, the user is given an option to either
+                                                append the data that will be generated in the current run to the
+                                                existing file by clicking the ‘Append > ’ button or delete the existing
+                                                file and start with a new file by clicking the ‘Delete > ’ button
+                                                (see image below). Clicking either of the buttons takes the user to the next
+                                                phase (<i>'Preparation Phase'</i>).
+                                                <br><br>
+                                                <img style="height:12cm;width:26cm;display:block; margin-left: auto;
+                                                margin-right: auto;" src="static/imgs/file_creation_file_exists.png">
+                                            </li>
+                                        </ul>
+                                    <p style="color: aliceblue; margin: 40px"><b>Preparation Phase:</b><br>
+                                        <i>We deal with the tool confirmation and preparation (tagging the tools with
+                                            ArUco markers) aspects in this phase. </i></p>
+
+                                    <ul style="color: aliceblue; margin: 40px">
+                                        <li>
+                                            <p style="color: aliceblue; margin: 40px">
+                                            From the <i>'Setup Phase'</i> we have:
+                                             <ul style="font-family: sans; color: aliceblue; margin: 40px">
+                                                <li><b>Hammer</b> with ArUco marker ID <b>1</b> </li>
+                                                <li><b>Cutter</b> with ID <b>0</b></li>
+                                                <li><b>Saw</b> with ID <b>2</b> </li>
+                                                <li><b>Measuring Tape</b> with ID <b>3</b> </li>
+                                            </ul>
+                                            <p style="color: aliceblue; margin: 40px">
+                                                The user must confirm the tool list from the table displayed (see image below).
+                                                If the tool list does not match, the user
+                                                has the option to go back to the <i>'Setup Phase'</i> to correct it.<br><br>
+                                                <img style="height:12cm;width:25cm;display:block; margin-left: auto;
+                                                margin-right: auto;" src="static/imgs/tool_list_confirmation.png">
+                                                <br>
+
+                                            </p>
+                                        </li>
+                                        <li>
+                                            The link in the red, can be used to generate and print ArUco markers for free.<br>
+                                            Clicking on it should redirect the user to <a href="https://chev.me/arucogen/">
+                                            https://chev.me/arucogen/</a>. <br>The user must enter the dictionary type,
+                                            marker ID, and it's desired dimensions, for it to be generated.
+
+                                            <br><br>
+                                            <b><i>Example:</i></b><br><br>
+                                            For the following tools and their respective affixed ArUco markers (see image below):<br><br>
+                                             <img style="height:12cm;width:25cm;display:block; margin-left: auto;
+                                                margin-right: auto;" src="static/imgs/tool_tagging.jpg">
+                                                <br><br>
+                                            We must generate the ArUco markers using the link as follows (see image below):<br><br>
+                                             <img style="height:7cm;width:25cm;display:block; margin-left: auto;
+                                                margin-right: auto;" src="static/imgs/aruco_generation_website.jpg">
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <center>
+                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"><br></h6>
+                                </center>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <center>
+                                    <h6 class="subtitle font-weight-normal" style="color:aliceblue"><br></h6>
+                                </center>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+	<!-- core  -->
+    <script src="/static/vendors/jquery/jquery-3.4.1.js"></script>
+    <script src="/static/vendors/bootstrap/bootstrap.bundle.js"></script>
+
+    <!-- bootstrap 3 affix -->
+	<script src="/static/vendors/bootstrap/bootstrap.affix.js"></script>
+
+    <!-- Owl carousel  -->
+    <script src="/static/vendors/owl-carousel/js/owl.carousel.js"></script>
+
+    <!-- Script js -->
+    <script src="/static/js/scripts.js"></script>
+
+    <script src="/static/js/disable_browser_back_button.js"></script>
+
+    <script type="text/javascript">
+
+    </script>
+
+</body>
+</html>
